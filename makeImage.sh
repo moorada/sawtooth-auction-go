@@ -1,1 +1,1 @@
-docker build -t sawtooth-auction-tp-go .
+docker build -t moorada/sawtooth-auction-tp-go .

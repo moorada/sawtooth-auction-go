@@ -15,8 +15,6 @@
 
 FROM ubuntu:bionic
 
-ENV VERSION=AUTO_STRICT
-
 RUN apt-get update \
  && apt-get install gnupg -y
 
@@ -40,10 +38,8 @@ RUN echo "deb [arch=amd64] http://repo.sawtooth.me/ubuntu/ci bionic universe" >>
  && rm -rf /var/lib/apt/lists/*
 
 #RUN mkdir -p /auctioin
-ENV GOPATH=/go:/go/src/github.com/hyperledger/sawtooth-sdk-go:/go/src/github.com/moorada/sawtooth-auction-go
-ENV PATH=$PATH:/project/bin:/go/bin:/usr/lib/go-1.13/bin
-
-RUN mkdir /go
+ENV GOPATH=/go:/go/src/github.com/hyperledger/sawtooth-sdk-go:/auction
+ENV PATH=$PATH:/project/bin:/go/bin:/usr/lib/go-1.13/bin:/auction
 
 RUN go get -u \
     github.com/golang/protobuf/proto \
@@ -55,15 +51,15 @@ RUN go get -u \
     github.com/golang/mock/gomock \
     github.com/golang/mock/mockgen \
     golang.org/x/crypto/ssh \
-    github.com/hyperledger/sawtooth-sdk-go \
-    github.com/moorada/sawtooth-auction-go/src/sawtooth_auction
+    github.com/hyperledger/sawtooth-sdk-go
 
 WORKDIR /go/src/github.com/hyperledger/sawtooth-sdk-go
 RUN go generate
 
 EXPOSE 4004/tcp
 
-WORKDIR /go/src/github.com/moorada/sawtooth-auction-go
-
-RUN bash -c "./install.sh"
-CMD ["auction", "-vv"]
+WORKDIR /auction
+COPY . ./
+RUN bash -c "./build.sh"
+RUN rm -rf src/ *.sh Dockerfile
+CMD bash -C "auction"
