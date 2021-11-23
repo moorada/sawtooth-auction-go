@@ -1,0 +1,140 @@
+version: "3"
+services:     # list all services for your application
+  # database of users
+
+  #
+  # rest-api:
+  #   image: hyperledger/sawtooth-rest-api:1.0
+  #   ports: [ "8008:8008" ]
+  #   depends_on:
+  #     - validator
+  #   entrypoint: sawtooth-rest-api -C tcp://validator:4004 --bind rest-api:8008
+  #   deploy:
+  #     # locate this service in the swarm manager
+  #     # placement:
+  #     #   constraints:
+  #     #     - node.role == manager
+  #     # deploy only one instance of this service
+  #     replicas: 1
+  #     restart_policy:
+  #       # restart if something went wrong
+  #       condition: on-failure
+  #   networks: [ "node1-net" ]
+
+  shell:
+    image: hyperledger/sawtooth-shell:1.0
+    depends_on:
+      - rest-api
+    deploy:
+      # deploy only one instance of this service
+      replicas: 1
+      restart_policy:
+        # restart if something went wrong
+        condition: on-failure
+    entrypoint: "bash -c \"\
+        sawtooth keygen && \
+        tail -f /dev/null \
+        \""
+    networks: [ "node1-net" ]
+
+  rest-api:
+    image: hyperledger/sawtooth-rest-api:1.0
+    ports: [ "8008:8008" ]
+    # volumes:
+    #   - "/var/run/docker.sock:/var/run/docker.sock"
+    deploy:
+      # deploy only one instance of this service
+      replicas: 1
+      restart_policy:
+        # restart if something went wrong
+        condition: on-failure
+    depends_on:
+      - validator
+    entrypoint: ["sawtooth-rest-api", "-C", "tcp://validator:4004", "--bind", "rest-api:8008", "-vv"]
+    networks: [ "node1-net" ]
+
+  settings-tp:
+    image: hyperledger/sawtooth-settings-tp:1.0
+    depends_on:
+      - validator
+    deploy:
+      # deploy only one instance of this service
+      replicas: 1
+      restart_policy:
+        # restart if something went wrong
+        condition: on-failure
+    entrypoint: settings-tp -vv -C tcp://validator:4004
+    networks: [ "node1-net" ]
+  #
+  # auction-tp-go:
+  #   image: moorada/sawtooth-auction-tp-go
+  #   depends_on:
+  #     - validator
+  #   deploy:
+  #     # deploy only one instance of this service
+  #     replicas: 1
+  #     restart_policy:
+  #       # restart if something went wrong
+  #       condition: on-failure
+  #   networks: [ "node1-net" ]
+  #   entrypoint: auction -vv -C tcp://validator:4004
+
+  validator:
+    image: hyperledger/sawtooth-validator:1.0
+    expose:
+      - 4004
+    ports:
+      - "4004:4004"
+    deploy:
+      # deploy only one instance of this service
+      replicas: 1
+      restart_policy:
+        # restart if something went wrong
+        condition: on-failure
+    networks: [ "node1-net" ]
+    # start the validator with an empty genesis batch
+    entrypoint: "bash -c \"\
+        sawadm keygen && \
+        sawtooth keygen my_key && \
+        sawset genesis -k /root/.sawtooth/keys/my_key.priv && \
+        sawset proposal create \
+          -k /root/.sawtooth/keys/my_key.priv \
+          sawtooth.consensus.algorithm.name=Devmode \
+          sawtooth.consensus.algorithm.version=0.1 \
+          -o config.batch && \
+        sawadm genesis config-genesis.batch config.batch && \
+        sawtooth-validator -vv \
+          --endpoint tcp://validator:8800 \
+          --bind component:tcp://eth0:4004 \
+          --bind network:tcp://eth0:8800 \
+          --bind consensus:tcp://eth0:5050 \
+        \""
+
+  devmode-engine:
+    image: hyperledger/sawtooth-devmode-engine-rust:1.0
+    depends_on:
+      - validator
+    deploy:
+      # deploy only one instance of this service
+      replicas: 1
+      restart_policy:
+        # restart if something went wrong
+        condition: on-failure
+    networks: [ "node1-net" ]
+    entrypoint: devmode-engine-rust -C tcp://validator:5050
+
+  visualizer:
+    image: dockersamples/visualizer:stable
+    ports: [ "80:8080" ]
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    deploy:
+      # locate this service in the swarm manager
+      placement:
+        constraints:
+          - node.role == manager
+    networks: [ "node1-net" ]
+
+networks:
+  node1-net:
+    external: true

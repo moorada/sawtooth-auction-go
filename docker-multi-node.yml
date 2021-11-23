@@ -1,0 +1,324 @@
+# Copyright 2019 Contributors to Hyperledger Sawtooth
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ------------------------------------------------------------------------------
+
+# This .yaml file will spin up four nodes hosting the Sawtooth Next Directory.
+# The Next Directory UI will be available at:
+#     http://10.5.0.70:4200 (node 0)
+#     http://10.5.0.71:4200 (node 1)
+#     http://10.5.0.72:4200 (node 2)
+#     http://10.5.0.73:4200 (node 3)
+
+version: "3"
+
+networks:
+  node_network0:
+    external: true
+  node_network1:
+    external: true
+  node_network2:
+    external: true
+  node_network3:
+    external: true
+
+services:
+
+  visualizer:
+    image: dockersamples/visualizer:stable
+    ports: [ "80:8080" ]
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    deploy:
+      # locate this service in the swarm manager
+      placement:
+        constraints:
+          - node.role == manager
+    networks: [ "node_network0" ]
+
+  shell:
+    image: hyperledger/sawtooth-shell:chime
+    depends_on:
+      - rest-api-0
+      - rest-api-1
+      - rest-api-2
+      - rest-api-3
+    networks:
+      - node_network0
+    environment:
+      PYTHONPATH: /project/hyperledger-acution/addressing:/project/hyperledger-acution/transaction_creation
+
+  acution-tp-0:
+    image: moorada/sawtooth-auction-tp-go:latest
+    networks:
+      - node_network0
+    entrypoint: auction -vv -C tcp://validator-1:4004
+
+  acution-tp-1:
+    image: moorada/sawtooth-auction-tp-go:latest
+    networks:
+      - node_network1
+    entrypoint: auction -vv -C tcp://validator-1:4004
+
+  acution-tp-2:
+    image: moorada/sawtooth-auction-tp-go:latest
+    networks:
+      - node_network2
+    entrypoint: auction -vv -C tcp://validator-1:4004
+
+
+  acution-tp-3:
+    image: moorada/sawtooth-auction-tp-go:latest
+    networks:
+      - node_network3
+    entrypoint: auction -vv -C tcp://validator-1:4004
+
+  # acution-client-3:
+  #   restart: unless-stopped
+  #   build:
+  #     context: .
+  #     dockerfile: ./docker/ui.Dockerfile
+  #   container_name: acution-client-3
+  #   image: acution-client-production:${ISOLATION_ID-latest}
+  #   ports:
+  #     - "4200"
+  #   depends_on:
+  #     - acution-server-3
+  #   networks:
+  #     node_network:
+  #       ipv4_address: 10.5.0.73
+  #   environment:
+  #     - HOST=10.5.0.63
+
+  rest-api-0:
+    image: hyperledger/sawtooth-rest-api:chime
+    expose:
+      - 8008
+    depends_on:
+      - validator-0
+    networks:
+      - node_network0
+
+    command: sawtooth-rest-api --connect tcp://validator-0:4004 --bind rest-api-0:8008 -vv
+
+  rest-api-1:
+    image: hyperledger/sawtooth-rest-api:chime
+    expose:
+      - 8008
+    depends_on:
+      - validator-1
+    networks:
+      - node_network1
+    command: sawtooth-rest-api --connect tcp://validator-1:4004 --bind rest-api-1:8008 -vvv
+
+  rest-api-2:
+    image: hyperledger/sawtooth-rest-api:chime
+    expose:
+      - 8008
+    depends_on:
+      - validator-2
+    networks:
+      - node_network2
+    command: sawtooth-rest-api --connect tcp://validator-2:4004 --bind rest-api-2:8008 -vv
+
+  rest-api-3:
+    image: hyperledger/sawtooth-rest-api:chime
+    expose:
+      - 8008
+    depends_on:
+      - validator-3
+    networks:
+      - node_network3
+    command: sawtooth-rest-api --connect tcp://validator-3:4004 --bind rest-api-3:8008 -vv
+
+  settings-tp-0:
+    image: hyperledger/sawtooth-settings-tp:chime
+    depends_on:
+      - validator-0
+    networks:
+      - node_network0
+    command: settings-tp -v --connect tcp://validator-0:4004
+
+  settings-tp-1:
+    image: hyperledger/sawtooth-settings-tp:chime
+    depends_on:
+      - validator-1
+    networks:
+      - node_network1
+    command: settings-tp -v --connect tcp://validator-1:4004
+
+  settings-tp-2:
+    image: hyperledger/sawtooth-settings-tp:chime
+    depends_on:
+      - validator-2
+    networks:
+      - node_network2
+    command: settings-tp -v --connect tcp://validator-2:4004
+
+  settings-tp-3:
+    image: hyperledger/sawtooth-settings-tp:chime
+    depends_on:
+      - validator-3
+    networks:
+      - node_network3
+    command: settings-tp -v --connect tcp://validator-3:4004
+
+  validator-0:
+    image: hyperledger/sawtooth-validator:chime
+    expose:
+      - 4004
+      - 8800
+    networks:
+      - node_network0
+    entrypoint: |
+      bash -c "
+        if [ ! -e /etc/sawtooth/keys/validator.priv ]; then \
+          sawadm keygen; \
+        fi && \
+        if [ ! -e config-genesis.batch ]; then \
+          sawset genesis -k /etc/sawtooth/keys/validator.priv -o config-genesis.batch; \
+        fi && \
+        if [ ! -e config.batch ]; then \
+          sawset proposal create \
+            -k /etc/sawtooth/keys/validator.priv \
+            sawtooth.consensus.algorithm=poet \
+            sawtooth.poet.report_public_key_pem=\"$$(cat /etc/sawtooth/simulator_rk_pub.pem)\" \
+            sawtooth.poet.valid_enclave_measurements=$$(poet enclave measurement) \
+            sawtooth.poet.valid_enclave_basenames=$$(poet enclave basename) \
+            sawtooth.poet.initial_wait_time=15 \
+            sawtooth.poet.target_wait_time=15 \
+            sawtooth.publisher.max_batches_per_block=100 \
+            -o config.batch; \
+        fi && \
+        if [ ! -e poet_genesis.batch ]; then \
+          poet registration create -k /etc/sawtooth/keys/validator.priv -o poet_genesis.batch; \
+        fi && \
+        if [ ! -e /var/lib/sawtooth/genesis.batch ]; then \
+          sawadm genesis config-genesis.batch config.batch poet_genesis.batch; \
+        fi && \
+        if [ ! -e /root/.sawtooth/keys/my_key.priv ]; then \
+          sawtooth keygen my_key; \
+        fi &&  \
+        sawtooth-validator -v \
+          --endpoint tcp://validator-0:8800 \
+          --bind component:tcp://eth0:4004 \
+          --bind network:tcp://eth0:8800 \
+          --scheduler parallel \
+          --peers tcp://validator-1:8800 \
+          --peers tcp://validator-2:8800 \
+          --peers tcp://validator-3:8800
+      \"\""
+
+  validator-1:
+    image: hyperledger/sawtooth-validator:chime
+    expose:
+      - 4004
+      - 8800
+    networks:
+      - node_network1
+    entrypoint: |
+      bash -c "
+        sawadm keygen && \
+        sawtooth keygen my_key && \
+        sawtooth-validator -v \
+          --endpoint tcp://validator-1:8800 \
+          --bind component:tcp://eth0:4004 \
+          --bind network:tcp://eth0:8800 \
+          --scheduler parallel \
+          --peers tcp://validator-0:8800 \
+          --peers tcp://validator-2:8800 \
+          --peers tcp://validator-3:8800
+      \"\""
+
+  validator-2:
+    image: hyperledger/sawtooth-validator:chime
+    expose:
+      - 4004
+      - 8800
+    networks:
+      - node_network2
+    entrypoint: |
+      bash -c "
+        sawadm keygen && \
+        sawtooth keygen my_key && \
+        sawtooth-validator -v \
+          --endpoint tcp://validator-2:8800 \
+          --bind component:tcp://eth0:4004 \
+          --bind network:tcp://eth0:8800 \
+          --scheduler parallel \
+          --peers tcp://validator-0:8800 \
+          --peers tcp://validator-1:8800 \
+          --peers tcp://validator-3:8800
+      \"\""
+
+  validator-3:
+    image: hyperledger/sawtooth-validator:chime
+    expose:
+      - 4004
+      - 5050
+      - 8800
+    networks:
+      - node_network3
+    entrypoint: |
+      bash -c "
+        sawadm keygen && \
+        sawtooth keygen my_key && \
+        sawtooth-validator -v \
+          --endpoint tcp://validator-3:8800 \
+          --bind component:tcp://eth0:4004 \
+          --bind network:tcp://eth0:8800 \
+          --scheduler parallel \
+          --peers tcp://validator-0:8800 \
+          --peers tcp://validator-1:8800 \
+          --peers tcp://validator-2:8800
+      \"\""
+
+  poet-validator-registry-tp-0:
+    image: hyperledger/sawtooth-poet-validator-registry-tp:chime
+    expose:
+      - 4004
+    depends_on:
+      - validator-0
+    networks:
+      - node_network0
+    command: poet-validator-registry-tp -C tcp://validator-0:4004
+
+  poet-validator-registry-tp-1:
+    image: hyperledger/sawtooth-poet-validator-registry-tp:chime
+    expose:
+      - 4004
+    depends_on:
+      - validator-1
+    networks:
+      - node_network1
+    command: poet-validator-registry-tp -C tcp://validator-1:4004
+
+  poet-validator-registry-tp-2:
+    image: hyperledger/sawtooth-poet-validator-registry-tp:chime
+    expose:
+      - 4004
+    depends_on:
+      - validator-2
+    networks:
+      - node_network2
+    command: poet-validator-registry-tp -C tcp://validator-2:4004
+
+  poet-validator-registry-tp-3:
+    image: hyperledger/sawtooth-poet-validator-registry-tp:chime
+    expose:
+      - 4004
+    depends_on:
+      - validator-3
+    networks:
+      - node_network3
+    command: poet-validator-registry-tp -C tcp://validator-3:4004

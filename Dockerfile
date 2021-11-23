@@ -66,4 +66,4 @@ EXPOSE 4004/tcp
 WORKDIR /go/src/github.com/moorada/sawtooth-auction-go
 
 RUN bash -c "./install.sh"
-CMD ["auction", "-vv"]
+#CMD ["auction", "-vv"]

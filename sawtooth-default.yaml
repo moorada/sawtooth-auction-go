@@ -60,7 +60,7 @@ services:
   #   entrypoint: xo-tp-go -vv -C tcp://validator:4004
 
   auction-tp-go:
-    image: sawtooth-auction-tp-go
+    image: moorada/sawtooth-auction-tp-go
     container_name: sawtooth-auction-tp-go-default
     depends_on:
       - validator
@@ -108,12 +108,12 @@ services:
       - validator
     entrypoint: sawtooth-rest-api -C tcp://validator:4004 --bind rest-api:8008
 
-  shell:
-    image: hyperledger/sawtooth-shell:chime
-    container_name: sawtooth-shell-default
-    depends_on:
-      - rest-api
-    entrypoint: "bash -c \"\
-        sawtooth keygen && \
-        tail -f /dev/null \
-        \""
+  # shell:
+  #   image: hyperledger/sawtooth-shell:chime
+  #   container_name: sawtooth-shell-default
+  #   depends_on:
+  #     - rest-api
+  #   entrypoint: "bash -c \"\
+  #       sawtooth keygen && \
+  #       tail -f /dev/null \
+  #       \""

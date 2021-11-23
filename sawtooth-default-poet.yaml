@@ -347,7 +347,7 @@ services:
     stop_signal: SIGKILL
 
   auction-tp-go-0:
-    image: moorada/sawtooth-auction-tp-go
+    image: moorada/sawtooth-auction-tp-go:latest
     container_name: sawtooth-auction-tp-go-default-0
     expose:
       - 4004
@@ -355,7 +355,7 @@ services:
     stop_signal: SIGKILL
 
   auction-tp-go-1:
-    image: moorada/sawtooth-auction-tp-go
+    image: moorada/sawtooth-auction-tp-go:latest
     container_name: sawtooth-auction-tp-go-default-1
     expose:
       - 4004
@@ -364,7 +364,7 @@ services:
 
 
   auction-tp-go-2:
-    image: moorada/sawtooth-auction-tp-go
+    image: moorada/sawtooth-auction-tp-go:latest
     container_name: sawtooth-auction-tp-go-default-2
     expose:
       - 4004
@@ -373,7 +373,7 @@ services:
 
 
   auction-tp-go-3:
-    image: moorada/sawtooth-auction-tp-go
+    image: moorada/sawtooth-auction-tp-go:latest
     container_name: sawtooth-auction-tp-go-default-3
     expose:
       - 4004
@@ -382,7 +382,7 @@ services:
 
 
   auction-tp-go-4:
-    image: moorada/sawtooth-auction-tp-go
+    image: moorada/sawtooth-auction-tp-go:latest
     container_name: sawtooth-auction-tp-go-default-4
     expose:
       - 4004

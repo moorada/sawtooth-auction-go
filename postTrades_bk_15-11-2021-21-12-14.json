@@ -1,0 +1,794 @@
+[
+  {
+    "sell": {
+      "symbol": "iota",
+      "amount": 297
+    },
+    "buy": {
+      "symbol": "algo",
+      "amount": 269
+    },
+    "done": 1,
+    "date": ""
+  },
+  {
+    "sell": {
+      "symbol": "iota",
+      "amount": 88.426
+    },
+    "buy": {
+      "symbol": "rsr",
+      "amount": 842
+    },
+    "done": 0,
+    "date": "09/01/21"
+  },
+  {
+    "sell": {
+      "symbol": "eos",
+      "amount": 31.3
+    },
+    "buy": {
+      "symbol": "yfi",
+      "amount": 0.002834
+    },
+    "done": 0,
+    "date": "28/01/21"
+  },
+  {
+    "sell": {
+      "symbol": "eos",
+      "amount": 40
+    },
+    "buy": {
+      "symbol": "xlm",
+      "amount": 420
+    },
+    "done": 1,
+    "date": ""
+  },
+  {
+    "sell": {
+      "symbol": "grt",
+      "amount": 130
+    },
+    "buy": {
+      "symbol": "xtz",
+      "amount": 65
+    },
+    "done": 1,
+    "date": ""
+  },
+  {
+    "sell": {
+      "symbol": "xtz",
+      "amount": 73.36
+    },
+    "buy": {
+      "symbol": "grt",
+      "amount": 186
+    },
+    "done": 0,
+    "date": "20/03/2021"
+  },
+  {
+    "sell": {
+      "symbol": "dash",
+      "amount": 3.5
+    },
+    "buy": {
+      "symbol": "iota",
+      "amount": 817
+    },
+    "done": 1,
+    "date": ""
+  },
+  {
+    "sell": {
+      "symbol": "iota",
+      "amount": 410
+    },
+    "buy": {
+      "symbol": "reef",
+      "amount": 11656
+    },
+    "done": 1,
+    "date": ""
+  },
+  {
+    "sell": {
+      "symbol": "iota",
+      "amount": 204
+    },
+    "buy": {
+      "symbol": "api3",
+      "amount": 40
+    },
+    "done": 1,
+    "date": ""
+  },
+  {
+    "sell": {
+      "symbol": "api3",
+      "amount": 40
+    },
+    "buy": {
+      "symbol": "iota",
+      "amount": 228
+    },
+    "done": 1,
+    "date": ""
+  },
+  {
+    "sell": {
+      "symbol": "iota",
+      "amount": 228
+    },
+    "buy": {
+      "symbol": "api3",
+      "amount": 58.95
+    },
+    "done": 1,
+    "date": ""
+  },
+  {
+    "sell": {
+      "symbol": "api3",
+      "amount": 58.95
+    },
+    "buy": {
+      "symbol": "iota",
+      "amount": 331.72
+    },
+    "done": 1,
+    "date": ""
+  },
+  {
+    "sell": {
+      "symbol": "iota",
+      "amount": 203
+    },
+    "buy": {
+      "symbol": "band",
+      "amount": 14
+    },
+    "done": 0,
+    "date": ""
+  },
+  {
+    "sell": {
+      "symbol": "eos",
+      "amount": 55
+    },
+    "buy": {
+      "symbol": "utnp",
+      "amount": 87714
+    },
+    "done": 1,
+    "date": ""
+  },
+  {
+    "sell": {
+      "symbol": "eos",
+      "amount": 55.9
+    },
+    "buy": {
+      "symbol": "utnp",
+      "amount": 66406
+    },
+    "done": 1,
+    "date": ""
+  },
+  {
+    "sell": {
+      "symbol": "rsr",
+      "amount": 1814
+    },
+    "buy": {
+      "symbol": "eos",
+      "amount": 29.63
+    },
+    "done": 1,
+    "date": ""
+  },
+  {
+    "sell": {
+      "symbol": "iota",
+      "amount": 315
+    },
+    "buy": {
+      "symbol": "algo",
+      "amount": 440
+    },
+    "done": 1,
+    "date": ""
+  },
+  {
+    "sell": {
+      "symbol": "egld",
+      "amount": 1.058
+    },
+    "buy": {
+      "symbol": "algo",
+      "amount": 141
+    },
+    "done": 1,
+    "date": ""
+  },
+  {
+    "sell": {
+      "symbol": "egld",
+      "amount": 5.111
+    },
+    "buy": {
+      "symbol": "algo",
+      "amount": 803
+    },
+    "done": 1,
+    "date": ""
+  },
+  {
+    "sell": {
+      "symbol": "egld",
+      "amount": 5
+    },
+    "buy": {
+      "symbol": "iota",
+      "amount": 567
+    },
+    "done": 1,
+    "date": ""
+  },
+  {
+    "sell": {
+      "symbol": "iota",
+      "amount": 331
+    },
+    "buy": {
+      "symbol": "api3",
+      "amount": 91.82
+    },
+    "done": 1,
+    "date": ""
+  },
+  {
+    "sell": {
+      "symbol": "api3",
+      "amount": 91.82
+    },
+    "buy": {
+      "symbol": "iota",
+      "amount": 335
+    },
+    "done": 1,
+    "date": ""
+  },
+  {
+    "sell": {
+      "symbol": "iota",
+      "amount": 567
+    },
+    "buy": {
+      "symbol": "egld",
+      "amount": 6.088
+    },
+    "done": 1,
+    "date": ""
+  },
+  {
+    "sell": {
+      "symbol": "eos",
+      "amount": 29.6
+    },
+    "buy": {
+      "symbol": "reef",
+      "amount": 5549
+    },
+    "done": 1,
+    "date": ""
+  },
+  {
+    "sell": {
+      "symbol": "eos",
+      "amount": 48.85
+    },
+    "buy": {
+      "symbol": "dot",
+      "amount": 9.4
+    },
+    "done": 1,
+    "date": ""
+  },
+  {
+    "sell": {
+      "symbol": "algo",
+      "amount": 490
+    },
+    "buy": {
+      "symbol": "egld",
+      "amount": 3.992
+    },
+    "done": 1,
+    "date": ""
+  },
+  {
+    "sell": {
+      "symbol": "reef",
+      "amount": 5549
+    },
+    "buy": {
+      "symbol": "eos",
+      "amount": 34.48
+    },
+    "done": 1,
+    "date": ""
+  },
+  {
+    "sell": {
+      "symbol": "eos",
+      "amount": 34.48
+    },
+    "buy": {
+      "symbol": "grt",
+      "amount": 166
+    },
+    "done": 0,
+    "date": "05/05/2021"
+  },
+  {
+    "sell": {
+      "symbol": "reef",
+      "amount": 11632.71
+    },
+    "buy": {
+      "symbol": "btc",
+      "amount": 0.01093474
+    },
+    "done": 1,
+    "date": ""
+  },
+  {
+    "sell": {
+      "symbol": "btc",
+      "amount": 0.01093474
+    },
+    "buy": {
+      "symbol": "xch",
+      "amount": 0.3566
+    },
+    "done": 0,
+    "date": ""
+  },
+  {
+    "sell": {
+      "symbol": "xlm",
+      "amount": 418
+    },
+    "buy": {
+      "symbol": "vet",
+      "amount": 1688
+    },
+    "done": 1,
+    "date": ""
+  },
+  {
+    "sell": {
+      "symbol": "algo",
+      "amount": 141
+    },
+    "buy": {
+      "symbol": "badger",
+      "amount": 7.62
+    },
+    "done": 1,
+    "date": ""
+  },
+  {
+    "sell": {
+      "symbol": "algo",
+      "amount": 440
+    },
+    "buy": {
+      "symbol": "iota",
+      "amount": 351
+    },
+    "done": 1,
+    "date": ""
+  },
+  {
+    "sell": {
+      "symbol": "egld",
+      "amount": 5.014
+    },
+    "buy": {
+      "symbol": "iota",
+      "amount": 487
+    },
+    "done": 0,
+    "date": "24/05/2021"
+  },
+  {
+    "sell": {
+      "symbol": "vet",
+      "amount": 1688
+    },
+    "buy": {
+      "symbol": "xlm",
+      "amount": 501
+    },
+    "done": 1,
+    "date": ""
+  },
+  {
+    "sell": {
+      "symbol": "algo",
+      "amount": 540
+    },
+    "buy": {
+      "symbol": "algo",
+      "amount": 482
+    },
+    "done": 1,
+    "date": ""
+  },
+  {
+    "sell": {
+      "symbol": "algo",
+      "amount": 299
+    },
+    "buy": {
+      "symbol": "algo",
+      "amount": 316
+    },
+    "done": 1,
+    "date": ""
+  },
+  {
+    "sell": {
+      "symbol": "algo",
+      "amount": 276
+    },
+    "buy": {
+      "symbol": "dodo",
+      "amount": 171.5
+    },
+    "done": 0,
+    "date": "07/06/2021"
+  },
+  {
+    "sell": {
+      "symbol": "iota",
+      "amount": 334.99
+    },
+    "buy": {
+      "symbol": "xch",
+      "amount": 0.8444
+    },
+    "done": 0,
+    "date": ""
+  },
+  {
+    "sell": {
+      "symbol": "egld",
+      "amount": 4.97
+    },
+    "buy": {
+      "symbol": "iota",
+      "amount": 554
+    },
+    "done": 1,
+    "date": ""
+  },
+  {
+    "sell": {
+      "symbol": "xlm",
+      "amount": 501
+    },
+    "buy": {
+      "symbol": "vet",
+      "amount": 2030
+    },
+    "done": 1,
+    "date": ""
+  },
+  {
+    "sell": {
+      "symbol": "algo",
+      "amount": 275
+    },
+    "buy": {
+      "symbol": "iota",
+      "amount": 334
+    },
+    "done": 1,
+    "date": ""
+  },
+  {
+    "sell": {
+      "symbol": "vet",
+      "amount": 2030
+    },
+    "buy": {
+      "symbol": "xlm",
+      "amount": 554
+    },
+    "done": 0,
+    "date": "24/07/2021"
+  },
+  {
+    "sell": {
+      "symbol": "iota",
+      "amount": 334
+    },
+    "buy": {
+      "symbol": "algo",
+      "amount": 305.9
+    },
+    "done": 1,
+    "date": ""
+  },
+  {
+    "sell": {
+      "symbol": "iota",
+      "amount": 554
+    },
+    "buy": {
+      "symbol": "egld",
+      "amount": 5.7
+    },
+    "done": 1,
+    "date": ""
+  },
+  {
+    "sell": {
+      "symbol": "egld",
+      "amount": 5.7
+    },
+    "buy": {
+      "symbol": "iota",
+      "amount": 603
+    },
+    "done": 1,
+    "date": ""
+  },
+  {
+    "sell": {
+      "symbol": "iota",
+      "amount": 500
+    },
+    "buy": {
+      "symbol": "egld",
+      "amount": 5.23
+    },
+    "done": 1,
+    "date": ""
+  },
+  {
+    "sell": {
+      "symbol": "egld",
+      "amount": 5.23
+    },
+    "buy": {
+      "symbol": "iota",
+      "amount": 547
+    },
+    "done": 0,
+    "date": "02/08/2021"
+  },
+  {
+    "sell": {
+      "symbol": "badger",
+      "amount": 7.62
+    },
+    "buy": {
+      "symbol": "algo",
+      "amount": 189
+    },
+    "done": 1,
+    "date": "07/08/2021"
+  },
+  {
+    "sell": {
+      "symbol": "iota",
+      "amount": 576
+    },
+    "buy": {
+      "symbol": "1inch",
+      "amount": 254.7
+    },
+    "done": 0,
+    "date": "03/09/2021"
+  },
+  {
+    "sell": {
+      "symbol": "utnp",
+      "amount": 32453
+    },
+    "buy": {
+      "symbol": "utnp",
+      "amount": 80809
+    },
+    "done": 1,
+    "date": ""
+  },
+  {
+    "sell": {
+      "symbol": "utnp",
+      "amount": 80809
+    },
+    "buy": {
+      "symbol": "eos",
+      "amount": 47.68
+    },
+    "done": 1,
+    "date": ""
+  },
+  {
+    "sell": {
+      "symbol": "algo",
+      "amount": 249
+    },
+    "buy": {
+      "symbol": "xlm",
+      "amount": 1630
+    },
+    "done": 1,
+    "date": ""
+  },
+  {
+    "sell": {
+      "symbol": "xlm",
+      "amount": 1630
+    },
+    "buy": {
+      "symbol": "algo",
+      "amount": 308
+    },
+    "done": 0,
+    "date": "10/10/2021"
+  },
+  {
+    "sell": {
+      "symbol": "dot",
+      "amount": 9.4
+    },
+    "buy": {
+      "symbol": "iota",
+      "amount": 319
+    },
+    "done": 0,
+    "date": "21/10/2021"
+  },
+  {
+    "sell": {
+      "symbol": "eos",
+      "amount": 47.6
+    },
+    "buy": {
+      "symbol": "eth",
+      "amount": 0.055
+    },
+    "done": 1,
+    "date": "19/10/2021"
+  },
+  {
+    "sell": {
+      "symbol": "enj",
+      "amount": 0
+    },
+    "buy": {
+      "symbol": "enj",
+      "amount": 9
+    },
+    "done": 1,
+    "date": "24/10/2021"
+  },
+  {
+    "sell": {
+      "symbol": "eth",
+      "amount": 0.055
+    },
+    "buy": {
+      "symbol": "eth",
+      "amount": 0.063
+    },
+    "done": 1,
+    "date": "27/10/2021"
+  },
+  {
+    "sell": {
+      "symbol": "algo",
+      "amount": 156
+    },
+    "buy": {
+      "symbol": "ctsi",
+      "amount": 391
+    },
+    "done": 0,
+    "date": "27/10/2021"
+  },
+  {
+    "sell": {
+      "symbol": "egld",
+      "amount": 10.077
+    },
+    "buy": {
+      "symbol": "egld",
+      "amount": 10.2157
+    },
+    "done": 1,
+    "date": "27/10/2021"
+  },
+  {
+    "sell": {
+      "symbol": "algo",
+      "amount": 200
+    },
+    "buy": {
+      "symbol": "nano",
+      "amount": 68.7
+    },
+    "done": 0,
+    "date": "29/10/2021"
+  },
+  {
+    "sell": {
+      "symbol": "eth",
+      "amount": 0.063
+    },
+    "buy": {
+      "symbol": "eth",
+      "amount": 0.072
+    },
+    "done": 1,
+    "date": "03/11/2021"
+  },
+  {
+    "sell": {
+      "symbol": "eth",
+      "amount": 0.072
+    },
+    "buy": {
+      "symbol": "orai",
+      "amount": 36.829
+    },
+    "done": 0,
+    "date": "04/11/2021"
+  },
+  {
+    "sell": {
+      "symbol": "algo",
+      "amount": 192
+    },
+    "buy": {
+      "symbol": "iota",
+      "amount": 268
+    },
+    "done": 0,
+    "date": "05/11/2021"
+  },
+  {
+    "sell": {
+      "symbol": "1inch",
+      "amount": 32.8
+    },
+    "buy": {
+      "symbol": "bnb",
+      "amount": 0.21334
+    },
+    "done": 1,
+    "date": "14/11/2021"
+  },
+  {
+    "sell": {
+      "symbol": "bnb",
+      "amount": 0.17508
+    },
+    "buy": {
+      "symbol": "pit",
+      "amount": 35394760000
+    },
+    "done": 0,
+    "date": "14/11/2021"
+  }
+]

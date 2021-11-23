@@ -23,6 +23,7 @@ const (
 	FAMILY_VERSION    string = "1.0"
 	DISTRIBUTION_NAME string = "sawtooth-auction"
 	DEFAULT_URL       string = "http://127.0.0.1:8008"
+	//DEFAULT_URL       string = "http://0.0.0.0:8008"
 	// Verbs
 	VERB_SET string = "set"
 	VERB_ADDITEM string = "addItem"
