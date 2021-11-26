@@ -44,8 +44,6 @@ services:
     deploy:
       placement:
         constraints: [node.hostname == node-nuc1]
-    expose:
-      - 8008
     depends_on:
       - validator-1
     networks:
@@ -57,8 +55,6 @@ services:
     deploy:
       placement:
         constraints: [node.hostname == node-nuc2]
-    expose:
-      - 8008
     depends_on:
       - validator-2
     networks:
@@ -70,8 +66,6 @@ services:
     deploy:
       placement:
         constraints: [node.hostname == node-nuc3]
-    expose:
-      - 8008
     depends_on:
       - validator-3
     networks:
@@ -83,8 +77,6 @@ services:
     deploy:
       placement:
         constraints: [node.hostname == node-nuc4]
-    expose:
-      - 8008
     depends_on:
       - validator-4
     networks:
@@ -140,9 +132,6 @@ services:
     deploy:
       placement:
         constraints: [node.hostname == node-nuc1]
-    expose:
-      - 4004
-      - 8800
     networks:
       - node_network
     entrypoint: "bash -c \"\
@@ -165,9 +154,6 @@ services:
     deploy:
       placement:
         constraints: [node.hostname == node-nuc2]
-    expose:
-      - 4004
-      - 8800
     networks:
       - node_network
     entrypoint: |
@@ -189,9 +175,6 @@ services:
     deploy:
       placement:
         constraints: [node.hostname == node-nuc3]
-    expose:
-      - 4004
-      - 8800
     networks:
       - node_network
     entrypoint: |
@@ -213,10 +196,6 @@ services:
     deploy:
       placement:
         constraints: [node.hostname == node-nuc4]
-    expose:
-      - 4004
-      - 5050
-      - 8800
     networks:
       - node_network
     entrypoint: |
@@ -238,8 +217,6 @@ services:
     deploy:
       placement:
         constraints: [node.hostname == node-nuc1]
-    expose:
-      - 4004
     depends_on:
       - validator-1
     networks:
@@ -252,8 +229,6 @@ services:
       placement:
         constraints: [node.hostname == node-nuc2]
     container_name: sawtooth-poet-validator-registry-tp-2
-    expose:
-      - 4004
     depends_on:
       - validator-2
     networks:
@@ -265,8 +240,6 @@ services:
     deploy:
       placement:
         constraints: [node.hostname == node-nuc3]
-    expose:
-      - 4004
     depends_on:
       - validator-3
     networks:
@@ -278,8 +251,6 @@ services:
     deploy:
       placement:
         constraints: [node.hostname == node-nuc4]
-    expose:
-      - 4004
     depends_on:
       - validator-4
     networks:
@@ -293,8 +264,6 @@ services:
         constraints: [node.hostname == node-nuc1]
     networks:
       - node_network
-    expose:
-      - 4004
     command: intkey-tp-python -C tcp://validator-1:4004
     stop_signal: SIGKILL
 
@@ -305,8 +274,6 @@ services:
         constraints: [node.hostname == node-nuc2]
     networks:
       - node_network
-    expose:
-      - 4004
     command: intkey-tp-python -C tcp://validator-2:4004
     stop_signal: SIGKILL
 
@@ -317,8 +284,6 @@ services:
         constraints: [node.hostname == node-nuc3]
     networks:
       - node_network
-    expose:
-      - 4004
     command: intkey-tp-python -C tcp://validator-3:4004
     stop_signal: SIGKILL
 
@@ -329,7 +294,53 @@ services:
         constraints: [node.hostname == node-nuc4]
     networks:
       - node_network
-    expose:
-      - 4004
     command: intkey-tp-python -C tcp://validator-4:4004
+    stop_signal: SIGKILL
+
+  auction-tp-go-1:
+    image: moorada/sawtooth-auction-tp-go
+    depends_on:
+      - validator
+    deploy:
+      placement:
+        constraints: [node.hostname == node-nuc1]
+    networks:
+      - node_network
+    command: auction -vv -C tcp://validator:4004
+    stop_signal: SIGKILL
+
+  auction-tp-go-2:
+    image: moorada/sawtooth-auction-tp-go
+    depends_on:
+      - validator
+    deploy:
+      placement:
+        constraints: [node.hostname == node-nuc2]
+    networks:
+      - node_network
+    command: auction -vv -C tcp://validator:4004
+    stop_signal: SIGKILL
+
+  auction-tp-go-3:
+    image: moorada/sawtooth-auction-tp-go
+    depends_on:
+      - validator
+    deploy:
+      placement:
+        constraints: [node.hostname == node-nuc3]
+    networks:
+      - node_network
+    command: auction -vv -C tcp://validator:4004
+    stop_signal: SIGKILL
+
+  auction-tp-go-4:
+    image: moorada/sawtooth-auction-tp-go
+    depends_on:
+      - validator
+    deploy:
+      placement:
+        constraints: [node.hostname == node-nuc4]
+    networks:
+      - node_network
+    command: auction -vv -C tcp://validator:4004
     stop_signal: SIGKILL
