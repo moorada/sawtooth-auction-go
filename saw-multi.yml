@@ -23,7 +23,7 @@ networks:
 
 services:
   shell:
-    image: hyperledger/sawtooth-shell:1.0.5
+    image: moorada/myshell
     deploy:
       placement:
         constraints: [node.hostname == node-nuc1]
