@@ -20,19 +20,27 @@ networks:
   node_network:
     driver: overlay
 
+
 services:
   shell:
-    image: hyperledger/sawtooth-shell:1.0
+    image: hyperledger/sawtooth-shell:1.0.5
+    deploy:
+      placement:
+        constraints: [node.hostname == node-nuc1]
     depends_on:
-      - rest-api-0
       - rest-api-1
       - rest-api-2
       - rest-api-3
+      - rest-api-4
     networks:
       - node_network
+    entrypoint: "bash -c \"\
+        sawtooth keygen && \
+        tail -f /dev/null \
+        \""
 
   rest-api-1:
-    image: hyperledger/sawtooth-rest-api:1.0
+    image: hyperledger/sawtooth-rest-api:1.0.5
     deploy:
       placement:
         constraints: [node.hostname == node-nuc1]
@@ -42,10 +50,10 @@ services:
       - validator-1
     networks:
       - node_network
-    command: sawtooth-rest-api --connect tcp://validator-1:4004 --bind rest-api-1:8008 -vv
+    command: sawtooth-rest-api --connect tcp://validator-1:4004 --bind 0.0.0.0:8008 -vv
 
   rest-api-2:
-    image: hyperledger/sawtooth-rest-api:1.0
+    image: hyperledger/sawtooth-rest-api:1.0.5
     deploy:
       placement:
         constraints: [node.hostname == node-nuc2]
@@ -55,10 +63,10 @@ services:
       - validator-2
     networks:
       - node_network
-    command: sawtooth-rest-api --connect tcp://validator-2:4004 --bind rest-api-2:8008 -vvv
+    command: sawtooth-rest-api --connect tcp://validator-2:4004 --bind 0.0.0.0:8008 -vvv
 
   rest-api-3:
-    image: hyperledger/sawtooth-rest-api:1.0
+    image: hyperledger/sawtooth-rest-api:1.0.5
     deploy:
       placement:
         constraints: [node.hostname == node-nuc3]
@@ -68,10 +76,10 @@ services:
       - validator-3
     networks:
       - node_network
-    command: sawtooth-rest-api --connect tcp://validator-3:4004 --bind rest-api-3:8008 -vv
+    command: sawtooth-rest-api --connect tcp://validator-3:4004 --bind 0.0.0.0:8008 -vv
 
   rest-api-4:
-    image: hyperledger/sawtooth-rest-api:1.0
+    image: hyperledger/sawtooth-rest-api:1.0.5
     deploy:
       placement:
         constraints: [node.hostname == node-nuc4]
@@ -81,10 +89,10 @@ services:
       - validator-4
     networks:
       - node_network
-    command: sawtooth-rest-api --connect tcp://validator-4:4004 --bind rest-api-4:8008 -vv
+    command: sawtooth-rest-api --connect tcp://validator-4:4004 --bind 0.0.0.0:8008 -vv
 
   settings-tp-1:
-    image: hyperledger/sawtooth-settings-tp:1.0
+    image: hyperledger/sawtooth-settings-tp:1.0.5
     deploy:
       placement:
         constraints: [node.hostname == node-nuc1]
@@ -95,7 +103,7 @@ services:
     command: settings-tp -v --connect tcp://validator-1:4004
 
   settings-tp-2:
-    image: hyperledger/sawtooth-settings-tp:1.0
+    image: hyperledger/sawtooth-settings-tp:1.0.5
     deploy:
       placement:
         constraints: [node.hostname == node-nuc2]
@@ -106,7 +114,7 @@ services:
     command: settings-tp -v --connect tcp://validator-2:4004
 
   settings-tp-3:
-    image: hyperledger/sawtooth-settings-tp:1.0
+    image: hyperledger/sawtooth-settings-tp:1.0.5
     deploy:
       placement:
         constraints: [node.hostname == node-nuc3]
@@ -117,7 +125,7 @@ services:
     command: settings-tp -v --connect tcp://validator-3:4004
 
   settings-tp-4:
-    image: hyperledger/sawtooth-settings-tp:1.0
+    image: hyperledger/sawtooth-settings-tp:1.0.5
     deploy:
       placement:
         constraints: [node.hostname == node-nuc4]
@@ -128,7 +136,7 @@ services:
     command: settings-tp -v --connect tcp://validator-3:4004
 
   validator-1:
-    image: hyperledger/sawtooth-validator:1.0
+    image: hyperledger/sawtooth-validator:1.0.5
     deploy:
       placement:
         constraints: [node.hostname == node-nuc1]
@@ -137,47 +145,23 @@ services:
       - 8800
     networks:
       - node_network
-    entrypoint: |
-      bash -c "
-        if [ ! -e /etc/sawtooth/keys/validator.priv ]; then \
-          sawadm keygen; \
-        fi && \
-        if [ ! -e config-genesis.batch ]; then \
-          sawset genesis -k /etc/sawtooth/keys/validator.priv -o config-genesis.batch; \
-        fi && \
-        if [ ! -e config.batch ]; then \
-          sawset proposal create \
-            -k /etc/sawtooth/keys/validator.priv \
-            sawtooth.consensus.algorithm=poet \
-            sawtooth.poet.report_public_key_pem=\"$$(cat /etc/sawtooth/simulator_rk_pub.pem)\" \
-            sawtooth.poet.valid_enclave_measurements=$$(poet enclave measurement) \
-            sawtooth.poet.valid_enclave_basenames=$$(poet enclave basename) \
-            sawtooth.poet.initial_wait_time=15 \
-            sawtooth.poet.target_wait_time=15 \
-            sawtooth.publisher.max_batches_per_block=100 \
-            -o config.batch; \
-        fi && \
-        if [ ! -e poet_genesis.batch ]; then \
-          poet registration create -k /etc/sawtooth/keys/validator.priv -o poet_genesis.batch; \
-        fi && \
-        if [ ! -e /var/lib/sawtooth/genesis.batch ]; then \
-          sawadm genesis config-genesis.batch config.batch poet_genesis.batch; \
-        fi && \
-        if [ ! -e /root/.sawtooth/keys/my_key.priv ]; then \
-          sawtooth keygen my_key; \
-        fi &&  \
-        sawtooth-validator -v \
-          --endpoint tcp://validator-1:8800 \
-          --bind component:tcp://eth0:4004 \
-          --bind network:tcp://eth0:8800 \
+    entrypoint: "bash -c \"\
+        sawadm keygen && \
+        sawtooth keygen my_key && \
+        sawset genesis -k /root/.sawtooth/keys/my_key.priv && \
+        sawadm genesis config-genesis.batch && \
+        sawtooth-validator -vv \
+          --endpoint tcp://0.0.0.0:8800 \
+          --bind component:tcp://0.0.0.0:4004 \
+          --bind network:tcp://0.0.0.0:8800 \
           --scheduler parallel \
-          --peers tcp://validator-2:8800 \
+          --peers tcp://validator-1:8800 \
           --peers tcp://validator-3:8800 \
-          --peers tcp://validator-4:8800
-      \"\""
+          --peers tcp://validator-4:8800 \
+        \""
 
   validator-2:
-    image: hyperledger/sawtooth-validator:1.0
+    image: hyperledger/sawtooth-validator:1.0.5
     deploy:
       placement:
         constraints: [node.hostname == node-nuc2]
@@ -191,9 +175,9 @@ services:
         sawadm keygen && \
         sawtooth keygen my_key && \
         sawtooth-validator -v \
-          --endpoint tcp://validator-2:8800 \
-          --bind component:tcp://eth0:4004 \
-          --bind network:tcp://eth0:8800 \
+          --endpoint tcp://0.0.0.0:8800 \
+          --bind component:tcp://0.0.0.0:4004 \
+          --bind network:tcp://0.0.0.0:8800 \
           --scheduler parallel \
           --peers tcp://validator-1:8800 \
           --peers tcp://validator-3:8800 \
@@ -201,7 +185,7 @@ services:
       \"\""
 
   validator-3:
-    image: hyperledger/sawtooth-validator:1.0
+    image: hyperledger/sawtooth-validator:1.0.5
     deploy:
       placement:
         constraints: [node.hostname == node-nuc3]
@@ -215,9 +199,9 @@ services:
         sawadm keygen && \
         sawtooth keygen my_key && \
         sawtooth-validator -v \
-          --endpoint tcp://validator-3:8800 \
-          --bind component:tcp://eth0:4004 \
-          --bind network:tcp://eth0:8800 \
+          --endpoint tcp://0.0.0.0:8800 \
+          --bind component:tcp://0.0.0.0:4004 \
+          --bind network:tcp://0.0.0.0:8800 \
           --scheduler parallel \
           --peers tcp://validator-1:8800 \
           --peers tcp://validator-2:8800 \
@@ -225,7 +209,7 @@ services:
       \"\""
 
   validator-4:
-    image: hyperledger/sawtooth-validator:1.0
+    image: hyperledger/sawtooth-validator:1.0.5
     deploy:
       placement:
         constraints: [node.hostname == node-nuc4]
@@ -240,9 +224,9 @@ services:
         sawadm keygen && \
         sawtooth keygen my_key && \
         sawtooth-validator -v \
-          --endpoint tcp://validator-4:8800 \
-          --bind component:tcp://eth0:4004 \
-          --bind network:tcp://eth0:8800 \
+          --endpoint tcp://0.0.0.0:8800 \
+          --bind component:tcp://0.0.0.0:4004 \
+          --bind network:tcp://0.0.0.0:8800 \
           --scheduler parallel \
           --peers tcp://validator-1:8800 \
           --peers tcp://validator-2:8800 \
@@ -250,7 +234,7 @@ services:
       \"\""
 
   poet-validator-registry-tp-1:
-    image: hyperledger/sawtooth-poet-validator-registry-tp:1.0
+    image: hyperledger/sawtooth-poet-validator-registry-tp:1.0.5
     deploy:
       placement:
         constraints: [node.hostname == node-nuc1]
@@ -263,7 +247,7 @@ services:
     command: poet-validator-registry-tp -C tcp://validator-1:4004
 
   poet-validator-registry-tp-2:
-    image: hyperledger/sawtooth-poet-validator-registry-tp:1.0
+    image: hyperledger/sawtooth-poet-validator-registry-tp:1.0.5
     deploy:
       placement:
         constraints: [node.hostname == node-nuc2]
@@ -277,7 +261,7 @@ services:
     command: poet-validator-registry-tp -C tcp://validator-2:4004
 
   poet-validator-registry-tp-3:
-    image: hyperledger/sawtooth-poet-validator-registry-tp:1.0
+    image: hyperledger/sawtooth-poet-validator-registry-tp:1.0.5
     deploy:
       placement:
         constraints: [node.hostname == node-nuc3]
@@ -290,7 +274,7 @@ services:
     command: poet-validator-registry-tp -C tcp://validator-3:4004
 
   poet-validator-registry-tp-4:
-    image: hyperledger/sawtooth-poet-validator-registry-tp:1.0
+    image: hyperledger/sawtooth-poet-validator-registry-tp:1.0.5
     deploy:
       placement:
         constraints: [node.hostname == node-nuc4]
@@ -303,7 +287,7 @@ services:
     command: poet-validator-registry-tp -C tcp://validator-4:4004
 
   intkey-tp-1:
-    image: hyperledger/sawtooth-intkey-tp-python:1.0
+    image: hyperledger/sawtooth-intkey-tp-python:1.0.5
     deploy:
       placement:
         constraints: [node.hostname == node-nuc1]
@@ -315,7 +299,7 @@ services:
     stop_signal: SIGKILL
 
   intkey-tp-2:
-    image: hyperledger/sawtooth-intkey-tp-python:1.0
+    image: hyperledger/sawtooth-intkey-tp-python:1.0.5
     deploy:
       placement:
         constraints: [node.hostname == node-nuc2]
@@ -327,7 +311,7 @@ services:
     stop_signal: SIGKILL
 
   intkey-tp-3:
-    image: hyperledger/sawtooth-intkey-tp-python:1.0
+    image: hyperledger/sawtooth-intkey-tp-python:1.0.5
     deploy:
       placement:
         constraints: [node.hostname == node-nuc3]
@@ -339,7 +323,7 @@ services:
     stop_signal: SIGKILL
 
   intkey-tp-4:
-    image: hyperledger/sawtooth-intkey-tp-python:1.0
+    image: hyperledger/sawtooth-intkey-tp-python:1.0.5
     deploy:
       placement:
         constraints: [node.hostname == node-nuc4]

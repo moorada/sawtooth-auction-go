@@ -8,5 +8,6 @@ require (
 	github.com/golang/protobuf v1.5.2
 	github.com/hyperledger/sawtooth-sdk-go v0.1.4
 	github.com/jessevdk/go-flags v1.5.0
+	github.com/moorada/sawtooth-core v1.99.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0
 )

@@ -1,0 +1,1 @@
+docker logs saw_rest-api.1.hnek0sw954n9ud04ctgv5fnng
