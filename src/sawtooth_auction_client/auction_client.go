@@ -68,7 +68,7 @@ func (auctionClient AuctionClient) AddItem(idItem string, nameItem string, descr
 
 	//payload := []byte("addItem,item1,giocattolo,bellissimo,posttime,exp,alfredo,timestamp,400,bidid1")
 	postTime1 := time.Now().Add(time.Second*3).UTC()
-	expiryTime1 := time.Now().Add(time.Second * 15).UTC()
+	expiryTime1 := time.Now().Add(time.Second * 3600).UTC()
 
 	return auctionClient.sendTransaction(VERB_ADDITEM, idItem, nameItem, description, postTime1.Format(layoutDate), expiryTime1.Format(layoutDate), "", "", "", "", wait)
 }
@@ -233,7 +233,7 @@ func (auctionClient AuctionClient) sendTransaction(
 
 	// construct the address
 	address := auctionClient.getAddress(idItem)
-	//fmt.Println("Address on the MerkleTree: ", address)
+	fmt.Println("Address on the MerkleTree: ", address)
 	// Construct TransactionHeader
 	rawTransactionHeader := transaction_pb2.TransactionHeader{
 		SignerPublicKey:  auctionClient.signer.GetPublicKey().AsHex(),

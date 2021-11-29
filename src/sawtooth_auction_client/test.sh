@@ -1,4 +1,10 @@
 #!/bin/bash
+# sawtooth peer list --url http://rest-api-1:8008
+#
+#
+#
+#
+
 go build
 ./sawtooth_auction_client addItem "11111" "T-shirt" "nice" "a" "v"
 sleep 1
