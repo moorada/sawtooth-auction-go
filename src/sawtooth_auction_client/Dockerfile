@@ -20,6 +20,7 @@ RUN apt-get update \
     golang-1.13-go \
     git \
     libssl-dev \
+    wget \
  && apt install ca-certificates libgnutls30 -y
 
 ENV GOPATH=/go
@@ -27,7 +28,6 @@ ENV PATH=$PATH:/go/bin:/usr/lib/go-1.13/bin
 
 RUN go get -u \
     github.com/moorada/sawtooth-auction-go/src/sawtooth_auction_client
-
-
-
+RUN wget https://raw.githubusercontent.com/moorada/sawtooth-auction-go/main/src/sawtooth_auction_client/test.sh
+RUN chmod +x test.sh
 

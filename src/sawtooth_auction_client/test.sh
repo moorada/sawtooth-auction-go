@@ -27,7 +27,7 @@ sleep 1
 sawtooth_auction_client placeBid "33333" "31" "Ted" "550" "timestamp"
 sleep 1
 
-./sawtooth_auction_client show "11111"
-./sawtooth_auction_client show "22222"
-./sawtooth_auction_client show "33333"
-./sawtooth_auction_client show "44444"
+sawtooth_auction_client show "11111"
+sawtooth_auction_client show "22222"
+sawtooth_auction_client show "33333"
+sawtooth_auction_client show "44444"
