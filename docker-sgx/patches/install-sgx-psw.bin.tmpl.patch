@@ -1,0 +1,26 @@
+--- /tmp/linux-sgx/linux/installer/bin/install-sgx-psw.bin.tmpl.bak	2018-01-26 12:02:12.780343255 +0100
++++ /tmp/linux-sgx/linux/installer/bin/install-sgx-psw.bin.tmpl	2018-01-26 12:02:22.364442287 +0100
+@@ -30,23 +30,6 @@
+ #
+ #
+ 
+-grep 'sgx\.ko$\|intel_sgx\.ko$' /lib/modules/$(uname -r)/modules.builtin &> /dev/null
+-if [[ $? != "0" ]]; then
+-    /sbin/modinfo isgx &> /dev/null
+-    if [[ $? != "0" ]]; then
+-        /sbin/modinfo intel_sgx &> /dev/null
+-        if [[ $? != "0" ]]; then
+-            lsmod | grep 'isgx\|intel_sgx' &> /dev/null
+-            if [[ $? = "0" ]]; then
+-                echo "Warning: You did not follow the document to install the driver package."
+-                echo
+-            elif [[ ! -e /dev/isgx ]] && [[ ! -e /dev/sgx ]]; then
+-                echo -e "\033[31;49;1mWarning: You may need to activate the SGX module if SGX is enabled in the kernel (e.g., sudo modprobe sgx) or download and install the SGX driver if the kernel doesn't have SGX support.\033[39;49;0m"
+-                echo
+-            fi
+-        fi
+-    fi
+-fi
+ 
+ set -e
+ 

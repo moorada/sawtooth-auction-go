@@ -1,0 +1,43 @@
+apt-get update &&
+apt-get install -q -y \
+     alien \
+     autoconf \
+     automake \
+     build-essential \
+     cmake \
+     libcurl4-openssl-dev \
+     libprotobuf-dev \
+     libssl-dev \
+     libtool \
+     libxml2-dev \
+     ocaml \
+     pkg-config \
+     protobuf-compiler \
+     python \
+     unzip \
+     uuid-dev \
+     wget
+
+apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 8AA7AF1F1091A5FD
+
+
+
+  apt-get install software-properties-common
+
+  add-apt-repository 'deb http://repo.sawtooth.me/ubuntu/1.0/stable bionic universe'
+
+apt-get update
+apt-get install -y -q \
+    sawtooth \
+    python3-sawtooth-poet-sgx
+
+
+Get the keys https://github.com/on-premise-signal/signal-setup-guide/blob/master/README.md#get-intel-sgx-pck-certificate
+
+dcap for your nuc: https://download.01.org/intel-sgx/dcap-1.0/DCAP_installers/ubuntu18.04/libsgx-dcap-ql_1.0.100.46460-1.0_amd64.deb
+retrivial for your nuc: https://download.01.org/intel-sgx/dcap-1.0/PCKIDRetrievalTool_v1.0.100.47036.tar.gz
+
+curl -v -X GET "https://api.trustedservices.intel.com/sgx/certification/v3/pckcert?encrypted_ppid={}&cpusvn={}&pcesvn={}&pceid={}" -H "Ocp-Apim-Subscription-Key: {9ba8c26bf0d543b8b380fd3b0bd3501a}"
+
+
+curl -v -X GET "https://api.trustedservices.intel.com/sgx/certification/v3/pckcert?encrypted_ppid={}&cpusvn={}&pcesvn={}&pceid={}" -H "Ocp-Apim-Subscription-Key: {subscription key}"
