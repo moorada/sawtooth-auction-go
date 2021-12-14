@@ -29,7 +29,7 @@ type PlaceBid struct {
 		BidId      string `positional-arg-name:"BidId" required:"true" description:"Name of key to set"`
 		BidderName string `positional-arg-name:"BidderName" required:"true" description:"Name of key to set"`
 		Amount     string `positional-arg-name:"Amount" required:"true" description:"Name of key to set"`
-		Timestamp  string `positional-arg-name:"Timestamp" required:"true" description:"Name of key to set"`
+		//Timestamp  string `positional-arg-name:"Timestamp" required:"true" description:"Name of key to set"`
 	} `positional-args:"true"`
 	Url     string `long:"url" description:"Specify URL of REST API"`
 	Keyfile string `long:"keyfile" description:"Identify file containing user's private key"`
@@ -65,6 +65,6 @@ func (args *PlaceBid) Run() error {
 	if err != nil {
 		return err
 	}
-	_, err = auctionClient.PlaceBid(args.Args.IdItem, args.Args.BidId, args.Args.BidderName, args.Args.Amount, args.Args.Timestamp, wait)
+	_, err = auctionClient.PlaceBid(args.Args.IdItem, args.Args.BidId, args.Args.BidderName, args.Args.Amount /*args.Args.Timestamp, */, wait)
 	return err
 }

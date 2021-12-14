@@ -99,7 +99,7 @@ func (self *AuctionHandler) Apply(request *processor_pb2.TpProcessRequest, conte
 				BidderName: payload.BidderName,
 				ID:         payload.BidId,
 				Amount:     payload.Amount,
-				Timestamp:  payload.Timestamp,
+				//Timestamp:  payload.Timestamp,
 			}
 			auction.Bids = append(auction.Bids, bid)
 			displayBid(payload, user)
@@ -136,29 +136,28 @@ func validateBid(auctionState *auction_state.AuctionState, payload *auction_payl
 
 	tMin, err := time.Parse(layoutDate, auction.Item.PostTime)
 	if err != nil {
-		return false, &processor.InvalidTransactionError{Msg: "Error parse date PostTime :"+auction.Item.PostTime}
+		return false, &processor.InvalidTransactionError{Msg: "Error parse date PostTime :" + auction.Item.PostTime}
 	}
 
-	tMaxBidder, err := time.Parse(layoutDate, payload.Timestamp)
-	if err != nil {
-		return false, &processor.InvalidTransactionError{Msg: "Error parse date Timestamp :"+payload.Timestamp}
-	}
+	//tMaxBidder, err := time.Parse(layoutDate, payload.Timestamp)
+	//if err != nil {
+	//	return false, &processor.InvalidTransactionError{Msg: "Error parse date Timestamp :"+payload.Timestamp}
+	//}
 	tMax, err := time.Parse(layoutDate, auction.Item.ExpiryTime)
 	if err != nil {
-		return false, &processor.InvalidTransactionError{Msg: "Error parse date ExpiryTime :"+auction.Item.ExpiryTime}
+		return false, &processor.InvalidTransactionError{Msg: "Error parse date ExpiryTime :" + auction.Item.ExpiryTime}
 	}
-	if tNow.After(tMaxBidder) {
-		return false, &processor.InvalidTransactionError{Msg: "After Max time bidder"}
-	}
+	//if tNow.After(tMaxBidder) {
+	//	return false, &processor.InvalidTransactionError{Msg: "After Max time bidder"}
+	//}
 	if tNow.After(tMax) {
 		return false, &processor.InvalidTransactionError{Msg: "Auction expired"}
 	}
 	if tNow.Before(tMin) {
-		return false, &processor.InvalidTransactionError{Msg: "The auction has not yet started, tnow:"+tNow.String()+", tMin:"+tMin.String()}
+		return false, &processor.InvalidTransactionError{Msg: "The auction has not yet started, tnow:" + tNow.String() + ", tMin:" + tMin.String()}
 	}
 	return true, nil
 }
-
 
 func displayCreate(payload *auction_payload.AuctionPayload, signer string) {
 	s := fmt.Sprintf("+ User %s created auction %s +", signer[:6], payload.IdItem)
@@ -177,4 +176,3 @@ func displayBid(payload *auction_payload.AuctionPayload, signer string) {
 	fmt.Println(s)
 	fmt.Println(border)
 }
-

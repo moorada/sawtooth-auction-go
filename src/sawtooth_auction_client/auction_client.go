@@ -68,15 +68,15 @@ func (auctionClient AuctionClient) AddItem(idItem string, nameItem string, descr
 
 	//payload := []byte("addItem,item1,giocattolo,bellissimo,posttime,exp,alfredo,timestamp,400,bidid1")
 
-	return auctionClient.sendTransaction(VERB_ADDITEM, idItem, nameItem, description, postTime, expiryTime, "", "", "", "", wait)
+	return auctionClient.sendTransaction(VERB_ADDITEM, idItem, nameItem, description, postTime, expiryTime, "", "", "" /*,""*/, wait)
 }
 
-func (auctionClient AuctionClient) PlaceBid(idItem string, BidId string, bidderName string, amount string, timeStamp string, wait uint) (string, error) {
+func (auctionClient AuctionClient) PlaceBid(idItem string, BidId string, bidderName string, amount string /*timeStamp string,*/, wait uint) (string, error) {
 
 	//payload := []byte("addItem,item1,giocattolo,bellissimo,posttime,exp,alfredo,timestamp,400,bidid1")
-	timeStamp1 := time.Now().Add(time.Minute)
+	//timeStamp1 := time.Now().Add(time.Minute)
 
-	return auctionClient.sendTransaction(VERB_PLACEBID, idItem, "", "", "", "", BidId, bidderName, amount, timeStamp1.Format(layoutDate), wait)
+	return auctionClient.sendTransaction(VERB_PLACEBID, idItem, "", "", "", "", BidId, bidderName, amount /*timeStamp1.Format(layoutDate), */, wait)
 }
 
 func (auctionClient AuctionClient) List() ([]map[interface{}]interface{}, error) {
@@ -216,14 +216,14 @@ func (auctionClient AuctionClient) sendRequest(
 }
 
 func (auctionClient AuctionClient) sendTransaction(
-	verb string, idItem string, nameItem string, description string, postTime string, expiryTime string, idBid string, bidderName string, amount string, timestamp string, wait uint) (string, error) {
+	verb string, idItem string, nameItem string, description string, postTime string, expiryTime string, idBid string, bidderName string, amount string /*timestamp string,*/, wait uint) (string, error) {
 
 	// construct the payload information in CBOR format
 	//payloadData := make(map[string]interface{})
 	//payloadData["Action"] = verb
 	//payloadData["Name"] = name
 	//payloadData["Value"] = value
-	payload := []byte(verb + "," + idItem + "," + nameItem + "," + description + "," + postTime + "," + expiryTime + "," + idBid + "," + bidderName + "," + amount + "," + timestamp)
+	payload := []byte(verb + "," + idItem + "," + nameItem + "," + description + "," + postTime + "," + expiryTime + "," + idBid + "," + bidderName + "," + amount /*+ "," + timestamp*/)
 	//payload, err := cbor.Dumps(payloadData)
 	//if err != nil {
 	//	return "", errors.New(fmt.Sprintf("Failed to construct CBOR: %v", err))

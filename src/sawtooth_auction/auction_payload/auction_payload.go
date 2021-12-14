@@ -19,6 +19,7 @@ package auction_payload
 
 import (
 	"github.com/hyperledger/sawtooth-sdk-go/processor"
+	"strconv"
 	"strings"
 )
 
@@ -30,9 +31,9 @@ type AuctionPayload struct {
 	PostTime    string
 	ExpiryTime  string
 	BidderName  string
-	Timestamp   string
-	Amount      string
-	BidId       string
+	//Timestamp   string
+	Amount string
+	BidId  string
 }
 
 func FromBytes(payloadData []byte) (*AuctionPayload, error) {
@@ -41,8 +42,8 @@ func FromBytes(payloadData []byte) (*AuctionPayload, error) {
 	}
 
 	parts := strings.Split(string(payloadData), ",")
-	if len(parts) != 10 {
-		return nil, &processor.InvalidTransactionError{Msg: "Payload is malformed"}
+	if len(parts) != 9 {
+		return nil, &processor.InvalidTransactionError{Msg: "Payload is malformed, it's " + strconv.Itoa(len(parts)) + " parts"}
 	}
 
 	payload := AuctionPayload{}
@@ -55,7 +56,7 @@ func FromBytes(payloadData []byte) (*AuctionPayload, error) {
 	payload.BidId = parts[6]
 	payload.BidderName = parts[7]
 	payload.Amount = parts[8]
-	payload.Timestamp = parts[9]
+	//payload.Timestamp = parts[9]
 
 	//TODO check everithing
 

@@ -1,1 +1,1 @@
-docker build -t moorada/sawtooth-auction-tp-go .
+docker build --no-cache -t moorada/sawtooth-auction-tp-go .

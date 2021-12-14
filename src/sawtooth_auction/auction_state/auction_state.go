@@ -31,14 +31,14 @@ var Namespace = hexdigest("auction")[:6]
 
 type AuctionTable struct {
 	Item Item
-	Bids   []Bid
+	Bids []Bid
 }
 
 type Bid struct {
 	ID         string
 	BidderName string
 	Amount     string
-	Timestamp  string
+	//Timestamp  string
 }
 
 type Item struct {
@@ -67,7 +67,7 @@ func NewAuctionState(context *processor.Context) *AuctionState {
 // GetAuction returns a game by it's name.
 func (self *AuctionState) GetAuction(name string) (*AuctionTable, error) {
 	auctions, err := self.loadAuctions(name)
-//	fmt.Println("Auctions", auctions)
+	//	fmt.Println("Auctions", auctions)
 	if err != nil {
 		return nil, err
 	}
@@ -100,7 +100,6 @@ func (self *AuctionState) PlaceBid(id string, auction *AuctionTable) error {
 	return self.storeAuctions(id, auctions)
 }
 
-
 func (self *AuctionState) loadAuctions(name string) (map[string]*AuctionTable, error) {
 	address := makeAddress(name)
 
@@ -111,7 +110,7 @@ func (self *AuctionState) loadAuctions(name string) (map[string]*AuctionTable, e
 		}
 		return make(map[string]*AuctionTable), nil
 	}
-	
+
 	results, err := self.context.GetState([]string{address})
 	if err != nil {
 		return nil, err
@@ -170,12 +169,11 @@ func Deserialize(data []byte) (map[string]*AuctionTable, error) {
 		itemSlice := strings.Split(tables[0], ",")
 		auction.Item = Item{ID: itemSlice[0], Name: itemSlice[1], Description: itemSlice[2], PostTime: itemSlice[3], ExpiryTime: itemSlice[4]}
 
-
-		if tables[1] != ""{
+		if tables[1] != "" {
 			bids := strings.Split(tables[1], ";")
 			for _, bid := range bids {
 				bidSlice := strings.Split(bid, ",")
-				auction.Bids = append(auction.Bids, Bid{ID: bidSlice[0], BidderName: bidSlice[1], Amount: bidSlice[2], Timestamp: bidSlice[3]})
+				auction.Bids = append(auction.Bids, Bid{ID: bidSlice[0], BidderName: bidSlice[1], Amount: bidSlice[2] /*Timestamp: bidSlice[3]*/})
 			}
 		}
 		auctions[auction.Item.ID] = &auction
@@ -208,7 +206,7 @@ func Serialize(auctionTables []*AuctionTable) []byte {
 			buffer.WriteString(",")
 			buffer.WriteString(bid.Amount)
 			buffer.WriteString(",")
-			buffer.WriteString(bid.Timestamp)
+			//buffer.WriteString(bid.Timestamp)
 			if j+1 != len(at.Bids) {
 				buffer.WriteString(";")
 			}
@@ -231,4 +229,3 @@ func hexdigest(str string) string {
 	hashBytes := hash.Sum(nil)
 	return strings.ToLower(hex.EncodeToString(hashBytes))
 }
-

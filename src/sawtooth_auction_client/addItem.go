@@ -72,8 +72,8 @@ func (args *AddItem) Run() error {
 		return err
 	}
 
-	postTime1 := time.Now().Add(time.Second * time.Duration(rand.Intn(args.Args.PostTime))).UTC()
-	expiryTime1 := time.Now().Add(time.Second * time.Duration(rand.Intn(args.Args.ExpiryTime))).UTC()
+	postTime1 := time.Now().Add(time.Second * time.Duration(rand.Intn(args.Args.PostTime)))
+	expiryTime1 := time.Now().Add(time.Second * time.Duration(rand.Intn(args.Args.ExpiryTime)))
 
 	_, err = auctionClient.AddItem(args.Args.IdItem, args.Args.NameItem, args.Args.Description, postTime1.Format(layoutDate), expiryTime1.Format(layoutDate), wait)
 	return err

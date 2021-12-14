@@ -24,8 +24,6 @@ import (
 	"github.com/hyperledger/sawtooth-sdk-go/logging"
 	flags "github.com/jessevdk/go-flags"
 	"os"
-	"os/user"
-	"path"
 	"strings"
 )
 
@@ -76,6 +74,7 @@ func main() {
 		&PlaceBid{},
 		&Show{},
 		&List{},
+		&WorkLoad{},
 	}
 	for _, cmd := range commands {
 		err := cmd.Register(parser.Command)
@@ -152,13 +151,13 @@ func GetClient(args Command, readFile bool) (AuctionClient, error) {
 
 func GetKeyfile(keyfile string) (string, error) {
 	if keyfile == "" {
-		username, err := user.Current()
-		if err != nil {
-			return "", err
-		}
-		//return "../../keys/ale.priv", nil
-		return path.Join(
-			username.HomeDir, ".sawtooth", "keys", "root"+".priv"), nil
+		//username, err := user.Current()
+		//if err != nil {
+		//	return "", err
+		//}
+		return "../../keys/ale.priv", nil
+		//return path.Join(
+		//	username.HomeDir, ".sawtooth", "keys", "root"+".priv"), nil
 	} else {
 		return keyfile, nil
 	}

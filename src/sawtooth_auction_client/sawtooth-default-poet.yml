@@ -19,13 +19,13 @@ volumes:
   poet-shared:
 
 services:
-  shell:
-    image: hyperledger/sawtooth-shell:chime
-    container_name: sawtooth-shell-default
-    entrypoint: "bash -c \"\
-        sawtooth keygen && \
-        tail -f /dev/null \
-        \""
+  # shell:
+  #   image: moorada/myshell:chime
+  #   container_name: sawtooth-shell-default
+  #   entrypoint: "bash -c \"\
+  #       sawtooth keygen && \
+  #       tail -f /dev/null \
+  #       \""
 
   validator-0:
     image: hyperledger/sawtooth-validator:chime
@@ -230,6 +230,8 @@ services:
     container_name: sawtooth-rest-api-default-2
     expose:
       - 8008
+    ports:
+      - "8008:8008"
     command: |
       bash -c "
         sawtooth-rest-api \
@@ -327,6 +329,39 @@ services:
       - 4004
     command: xo-tp-python -vv -C tcp://validator-2:4004
     stop_signal: SIGKILL
+
+  auction-tp-go-1:
+    image: moorada/sawtooth-auction-tp-go
+    container_name: sawtooth-auction-tp-default-1
+    expose:
+      - 4004
+    command: auction -vv -C tcp://validator-1:4004
+    stop_signal: SIGKILL
+
+  auction-tp-go-2:
+    image: moorada/sawtooth-auction-tp-go
+    container_name: sawtooth-auction-tp-default-2
+    expose:
+      - 4004
+    command: auction -vv -C tcp://validator-2:4004
+    stop_signal: SIGKILL
+
+  auction-tp-go-3:
+    image: moorada/sawtooth-auction-tp-go
+    container_name: sawtooth-auction-tp-default-3
+    expose:
+      - 4004
+    command: auction -vv -C tcp://validator-3:4004
+    stop_signal: SIGKILL
+
+  auction-tp-go-4:
+    image: moorada/sawtooth-auction-tp-go
+    container_name: sawtooth-auction-tp-default-4
+    expose:
+      - 4004
+    command: auction -vv -C tcp://validator-4:4004
+    stop_signal: SIGKILL
+
 
   xo-tp-3:
     image: hyperledger/sawtooth-xo-tp-python:chime
