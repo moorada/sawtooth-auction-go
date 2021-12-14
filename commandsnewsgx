@@ -1,0 +1,21 @@
+apt-get update && apt-get install -y gnupg2
+apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 44FC67F19B2466EA
+apt-get install software-properties-common
+apt-add-repository "deb http://repo.sawtooth.me/ubuntu/nightly bionic universe"
+apt-get update
+apt-get install -y \
+  sawtooth \
+  python3-sawtooth-poet-engine \
+  python3-sawtooth-poet-families \
+  python3-sawtooth-poet-cli \
+  python3-sawtooth-poet-sgx
+
+
+
+
+
+//download the correct poet file configuration
+sawadm keygen
+
+cd /tmp
+sawset genesis --key /etc/sawtooth/keys/validator.priv -o config-genesis.batch

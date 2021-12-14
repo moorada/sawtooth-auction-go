@@ -67,10 +67,8 @@ func NewAuctionClient(url string, keyfile string) (AuctionClient, error) {
 func (auctionClient AuctionClient) AddItem(idItem string, nameItem string, description string, postTime string, expiryTime string, wait uint) (string, error) {
 
 	//payload := []byte("addItem,item1,giocattolo,bellissimo,posttime,exp,alfredo,timestamp,400,bidid1")
-	postTime1 := time.Now().Add(time.Second*3).UTC()
-	expiryTime1 := time.Now().Add(time.Second * 3600).UTC()
 
-	return auctionClient.sendTransaction(VERB_ADDITEM, idItem, nameItem, description, postTime1.Format(layoutDate), expiryTime1.Format(layoutDate), "", "", "", "", wait)
+	return auctionClient.sendTransaction(VERB_ADDITEM, idItem, nameItem, description, postTime, expiryTime, "", "", "", "", wait)
 }
 
 func (auctionClient AuctionClient) PlaceBid(idItem string, BidId string, bidderName string, amount string, timeStamp string, wait uint) (string, error) {

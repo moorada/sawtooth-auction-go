@@ -13,7 +13,7 @@
 # limitations under the License.
 # -----------------------------------------------------------------------------
 
-FROM hyperledger/sawtooth-shell:1.0.5
+FROM hyperledger/sawtooth-shell:chime
 
 RUN apt-get update \
  && apt-get install -y -q \
@@ -28,6 +28,5 @@ ENV PATH=$PATH:/go/bin:/usr/lib/go-1.13/bin
 
 RUN go get -u \
     github.com/moorada/sawtooth-auction-go/src/sawtooth_auction_client
-RUN wget https://raw.githubusercontent.com/moorada/sawtooth-auction-go/main/src/sawtooth_auction_client/test.sh
-RUN chmod +x test.sh
-
+# RUN wget https://raw.githubusercontent.com/moorada/sawtooth-auction-go/main/src/sawtooth_auction_client/test.sh
+# RUN chmod +x test.sh

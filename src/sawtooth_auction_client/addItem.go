@@ -19,6 +19,8 @@ package main
 
 import (
 	"github.com/jessevdk/go-flags"
+	"math/rand"
+	"time"
 )
 
 type AddItem struct {
@@ -28,8 +30,8 @@ type AddItem struct {
 		IdItem      string `positional-arg-name:"IdItem" required:"true" description:"Name of key to set"`
 		NameItem    string `positional-arg-name:"NamItem" required:"true" description:"Name of key to set"`
 		Description string `positional-arg-name:"Description" required:"true" description:"Name of key to set"`
-		PostTime    string `positional-arg-name:"PostTime" required:"true" description:"Name of key to set"`
-		ExpiryTime  string `positional-arg-name:"ExpiryTime" required:"true" description:"Name of key to set"`
+		PostTime    int    `positional-arg-name:"PostTime" required:"true" description:"Name of key to set"`
+		ExpiryTime  int    `positional-arg-name:"ExpiryTime" required:"true" description:"Name of key to set"`
 		//BidderName  string
 		//Timestamp   string
 		//Amount      string
@@ -69,6 +71,10 @@ func (args *AddItem) Run() error {
 	if err != nil {
 		return err
 	}
-	_, err = auctionClient.AddItem(args.Args.IdItem, args.Args.NameItem, args.Args.Description, args.Args.PostTime, args.Args.ExpiryTime, wait)
+
+	postTime1 := time.Now().Add(time.Second * time.Duration(rand.Intn(args.Args.PostTime))).UTC()
+	expiryTime1 := time.Now().Add(time.Second * time.Duration(rand.Intn(args.Args.ExpiryTime))).UTC()
+
+	_, err = auctionClient.AddItem(args.Args.IdItem, args.Args.NameItem, args.Args.Description, postTime1.Format(layoutDate), expiryTime1.Format(layoutDate), wait)
 	return err
 }
