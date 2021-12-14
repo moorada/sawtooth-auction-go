@@ -22,7 +22,7 @@ networks:
 
 services:
   shell:
-    image: moorada/myshell
+    image: moorada/sawtooth-shell
     deploy:
       placement:
         constraints: [node.hostname == node-nuc1]
@@ -39,7 +39,7 @@ services:
         \""
 
   rest-api-1:
-    image: hyperledger/sawtooth-rest-api:1.0.5
+    image: hyperledger/sawtooth-rest-api:chime
     deploy:
       placement:
         constraints: [node.hostname == node-nuc1]
@@ -50,7 +50,7 @@ services:
     command: sawtooth-rest-api --connect tcp://validator-1:4004 --bind 0.0.0.0:8008 -vv
 
   rest-api-2:
-    image: hyperledger/sawtooth-rest-api:1.0.5
+    image: hyperledger/sawtooth-rest-api:chime
     deploy:
       placement:
         constraints: [node.hostname == node-nuc2]
@@ -61,7 +61,7 @@ services:
     command: sawtooth-rest-api --connect tcp://validator-2:4004 --bind 0.0.0.0:8008 -vv
 
   rest-api-3:
-    image: hyperledger/sawtooth-rest-api:1.0.5
+    image: hyperledger/sawtooth-rest-api:chime
     deploy:
       placement:
         constraints: [node.hostname == node-nuc3]
@@ -72,7 +72,7 @@ services:
     command: sawtooth-rest-api --connect tcp://validator-3:4004 --bind 0.0.0.0:8008 -vv
 
   rest-api-4:
-    image: hyperledger/sawtooth-rest-api:1.0.5
+    image: hyperledger/sawtooth-rest-api:chime
     deploy:
       placement:
         constraints: [node.hostname == node-nuc4]
@@ -83,7 +83,7 @@ services:
     command: sawtooth-rest-api --connect tcp://validator-4:4004 --bind 0.0.0.0:8008 -vv
 
   settings-tp-1:
-    image: hyperledger/sawtooth-settings-tp:1.0.5
+    image: hyperledger/sawtooth-settings-tp:chime
     deploy:
       placement:
         constraints: [node.hostname == node-nuc1]
@@ -94,7 +94,7 @@ services:
     command: settings-tp -vvv --connect tcp://validator-1:4004
 
   settings-tp-2:
-    image: hyperledger/sawtooth-settings-tp:1.0.5
+    image: hyperledger/sawtooth-settings-tp:chime
     deploy:
       placement:
         constraints: [node.hostname == node-nuc2]
@@ -105,7 +105,7 @@ services:
     command: settings-tp -v --connect tcp://validator-2:4004
 
   settings-tp-3:
-    image: hyperledger/sawtooth-settings-tp:1.0.5
+    image: hyperledger/sawtooth-settings-tp:chime
     deploy:
       placement:
         constraints: [node.hostname == node-nuc3]
@@ -116,7 +116,7 @@ services:
     command: settings-tp -v --connect tcp://validator-3:4004
 
   settings-tp-4:
-    image: hyperledger/sawtooth-settings-tp:1.0.5
+    image: hyperledger/sawtooth-settings-tp:chime
     deploy:
       placement:
         constraints: [node.hostname == node-nuc4]
@@ -127,7 +127,7 @@ services:
     command: settings-tp -v --connect tcp://validator-4:4004
 
   validator-1:
-    image: hyperledger/sawtooth-validator:1.0.5
+    image: hyperledger/sawtooth-validator:chime
     deploy:
       placement:
         constraints: [node.hostname == node-nuc1]
@@ -150,7 +150,7 @@ services:
         \""
 
   # validator-1:
-  #   image: hyperledger/sawtooth-validator:1.0.5
+  #   image: hyperledger/sawtooth-validator:chime
   #   deploy:
   #     placement:
   #       constraints: [node.hostname == node-nuc1]
@@ -187,7 +187,7 @@ services:
   #     \"\""
 
   validator-2:
-    image: hyperledger/sawtooth-validator:1.0.5
+    image: hyperledger/sawtooth-validator:chime
     deploy:
       placement:
         constraints: [node.hostname == node-nuc2]
@@ -208,7 +208,7 @@ services:
         \""
 
   validator-3:
-    image: hyperledger/sawtooth-validator:1.0.5
+    image: hyperledger/sawtooth-validator:chime
     deploy:
       placement:
         constraints: [node.hostname == node-nuc3]
@@ -229,7 +229,7 @@ services:
         \""
 
   validator-4:
-    image: hyperledger/sawtooth-validator:1.0.5
+    image: hyperledger/sawtooth-validator:chime
     deploy:
       placement:
         constraints: [node.hostname == node-nuc4]
@@ -250,7 +250,7 @@ services:
         \""
 
   poet-validator-registry-tp-1:
-    image: hyperledger/sawtooth-poet-validator-registry-tp:1.0.5
+    image: hyperledger/sawtooth-poet-validator-registry-tp:chime
     deploy:
       placement:
         constraints: [node.hostname == node-nuc1]
@@ -261,7 +261,7 @@ services:
     command: poet-validator-registry-tp -vv -C tcp://validator-1:4004
 
   poet-validator-registry-tp-2:
-    image: hyperledger/sawtooth-poet-validator-registry-tp:1.0.5
+    image: hyperledger/sawtooth-poet-validator-registry-tp:chime
     deploy:
       placement:
         constraints: [node.hostname == node-nuc2]
@@ -272,7 +272,7 @@ services:
     command: poet-validator-registry-tp -vv -C tcp://validator-2:4004
 
   poet-validator-registry-tp-3:
-    image: hyperledger/sawtooth-poet-validator-registry-tp:1.0.5
+    image: hyperledger/sawtooth-poet-validator-registry-tp:chime
     deploy:
       placement:
         constraints: [node.hostname == node-nuc3]
@@ -283,7 +283,7 @@ services:
     command: poet-validator-registry-tp -vv -C tcp://validator-3:4004
 
   poet-validator-registry-tp-4:
-    image: hyperledger/sawtooth-poet-validator-registry-tp:1.0.5
+    image: hyperledger/sawtooth-poet-validator-registry-tp:chime
     deploy:
       placement:
         constraints: [node.hostname == node-nuc4]
@@ -294,7 +294,7 @@ services:
     command: poet-validator-registry-tp -vv -C tcp://validator-4:4004
 
   intkey-tp-1:
-    image: hyperledger/sawtooth-intkey-tp-python:1.0.5
+    image: hyperledger/sawtooth-intkey-tp-python:chime
     deploy:
       placement:
         constraints: [node.hostname == node-nuc1]
@@ -304,7 +304,7 @@ services:
     stop_signal: SIGKILL
 
   intkey-tp-2:
-    image: hyperledger/sawtooth-intkey-tp-python:1.0.5
+    image: hyperledger/sawtooth-intkey-tp-python:chime
     deploy:
       placement:
         constraints: [node.hostname == node-nuc2]
@@ -314,7 +314,7 @@ services:
     stop_signal: SIGKILL
 
   intkey-tp-3:
-    image: hyperledger/sawtooth-intkey-tp-python:1.0.5
+    image: hyperledger/sawtooth-intkey-tp-python:chime
     deploy:
       placement:
         constraints: [node.hostname == node-nuc3]
@@ -324,7 +324,7 @@ services:
     stop_signal: SIGKILL
 
   intkey-tp-4:
-    image: hyperledger/sawtooth-intkey-tp-python:1.0.5
+    image: hyperledger/sawtooth-intkey-tp-python:chime
     deploy:
       placement:
         constraints: [node.hostname == node-nuc4]
@@ -334,7 +334,7 @@ services:
     stop_signal: SIGKILL
 
   auction-tp-go-1:
-    image: moorada/sawtooth-auction-tp-go
+    image: moorada/sawtooth-auction-tp
     depends_on:
       - validator-1
     deploy:
@@ -346,7 +346,7 @@ services:
     stop_signal: SIGKILL
 
   auction-tp-go-2:
-    image: moorada/sawtooth-auction-tp-go
+    image: moorada/sawtooth-auction-tp
     depends_on:
       - validator-2
     deploy:
@@ -358,7 +358,7 @@ services:
     stop_signal: SIGKILL
 
   auction-tp-go-3:
-    image: moorada/sawtooth-auction-tp-go
+    image: moorada/sawtooth-auction-tp
     depends_on:
       - validator-3
     deploy:
@@ -370,7 +370,7 @@ services:
     stop_signal: SIGKILL
 
   auction-tp-go-4:
-    image: moorada/sawtooth-auction-tp-go
+    image: moorada/sawtooth-auction-tp
     depends_on:
       - validator-4
     deploy:

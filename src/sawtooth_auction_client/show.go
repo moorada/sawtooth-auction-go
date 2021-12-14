@@ -125,7 +125,7 @@ func PrintAuction(data string) {
 	}
 
 	columns := []string{
-		"Id Bid", "Name Bidder", "Amount", "Timestamp",
+		"Id Bid", "Name Bidder", "Amount", // "Timestamp",
 	}
 
 	tui.Table(os.Stdout, columns, rows)

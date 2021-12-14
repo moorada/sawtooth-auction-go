@@ -205,7 +205,7 @@ func Serialize(auctionTables []*AuctionTable) []byte {
 			buffer.WriteString(bid.BidderName)
 			buffer.WriteString(",")
 			buffer.WriteString(bid.Amount)
-			buffer.WriteString(",")
+			//buffer.WriteString(",")
 			//buffer.WriteString(bid.Timestamp)
 			if j+1 != len(at.Bids) {
 				buffer.WriteString(";")
