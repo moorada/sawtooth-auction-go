@@ -79,8 +79,8 @@ func (args *WorkLoad) Run() error {
 	for i := 0; i < args.Args.Quantity; i++ {
 
 		time.Sleep(time.Millisecond * time.Duration(rand.Intn(args.Args.WaitTime)))
-		expiryTime := time.Now().Add(time.Minute * 30).Add(time.Hour * (-1))
-		postTime := time.Now().Add(time.Hour * (-1))
+		expiryTime := time.Now().Add(time.Minute * 30)
+		postTime := time.Now()
 		number := strconv.Itoa(i)
 
 		_, err = auctionClient.AddItem(idItem+number, nameItem+number, description+number, postTime.Format(layoutDate), expiryTime.Format(layoutDate), wait)

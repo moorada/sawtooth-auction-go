@@ -1,0 +1,478 @@
+# Copyright 2019 Contributors to Hyperledger Sawtooth
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ------------------------------------------------------------------------------
+
+
+version: "3"
+
+networks:
+  node_network:
+    driver: overlay
+volumes:
+    poet-shared:
+
+services:
+  shell:
+    image: moorada/sawtooth-shell
+    deploy:
+      placement:
+        constraints: [node.hostname == node-nuc1]
+    depends_on:
+      - rest-api-1
+      - rest-api-2
+      - rest-api-3
+      - rest-api-4
+    networks:
+      - node_network
+    entrypoint: "bash -c \"\
+        sawtooth keygen && \
+        tail -f /dev/null \
+        \""
+
+  rest-api-1:
+    image: hyperledger/sawtooth-rest-api:chime
+    deploy:
+      placement:
+        constraints: [node.hostname == node-nuc1]
+    depends_on:
+      - validator-1
+    networks:
+      - node_network
+    command: sawtooth-rest-api --connect tcp://validator-1:4004 --bind 0.0.0.0:8008 -vv
+
+  rest-api-2:
+    image: hyperledger/sawtooth-rest-api:chime
+    deploy:
+      placement:
+        constraints: [node.hostname == node-nuc2]
+    depends_on:
+      - validator-2
+    networks:
+      - node_network
+    command: sawtooth-rest-api --connect tcp://validator-2:4004 --bind 0.0.0.0:8008 -vv
+
+  rest-api-3:
+    image: hyperledger/sawtooth-rest-api:chime
+    deploy:
+      placement:
+        constraints: [node.hostname == node-nuc3]
+    depends_on:
+      - validator-3
+    networks:
+      - node_network
+    command: sawtooth-rest-api --connect tcp://validator-3:4004 --bind 0.0.0.0:8008 -vv
+
+  rest-api-4:
+    image: hyperledger/sawtooth-rest-api:chime
+    deploy:
+      placement:
+        constraints: [node.hostname == node-nuc4]
+    depends_on:
+      - validator-4
+    networks:
+      - node_network
+    command: sawtooth-rest-api --connect tcp://validator-4:4004 --bind 0.0.0.0:8008 -vv
+
+  settings-tp-1:
+    image: hyperledger/sawtooth-settings-tp:chime
+    deploy:
+      placement:
+        constraints: [node.hostname == node-nuc1]
+    depends_on:
+      - validator-1
+    networks:
+      - node_network
+    command: settings-tp -vvv --connect tcp://validator-1:4004
+
+  settings-tp-2:
+    image: hyperledger/sawtooth-settings-tp:chime
+    deploy:
+      placement:
+        constraints: [node.hostname == node-nuc2]
+    depends_on:
+      - validator-2
+    networks:
+      - node_network
+    command: settings-tp -v --connect tcp://validator-2:4004
+
+  settings-tp-3:
+    image: hyperledger/sawtooth-settings-tp:chime
+    deploy:
+      placement:
+        constraints: [node.hostname == node-nuc3]
+    depends_on:
+      - validator-3
+    networks:
+      - node_network
+    command: settings-tp -v --connect tcp://validator-3:4004
+
+  settings-tp-4:
+    image: hyperledger/sawtooth-settings-tp:chime
+    deploy:
+      placement:
+        constraints: [node.hostname == node-nuc4]
+    depends_on:
+      - validator-4
+    networks:
+      - node_network
+    command: settings-tp -v --connect tcp://validator-4:4004
+
+  validator-1:
+    image: hyperledger/sawtooth-validator:chime
+    deploy:
+      placement:
+        constraints: [node.hostname == node-nuc1]
+    networks:
+      - node_network
+    volumes:
+      - poet-shared:/poet-shared
+    entrypoint: "bash -c \"\
+        sawadm keygen --force && \
+        mkdir -p /poet-shared/validator-1 || true && \
+        cp -a /etc/sawtooth/keys /poet-shared/validator-1/ && \
+        while [ ! -f /poet-shared/poet-enclave-measurement ]; do sleep 1; done && \
+        while [ ! -f /poet-shared/poet-enclave-basename ]; do sleep 1; done && \
+        while [ ! -f /poet-shared/poet.batch ]; do sleep 1; done && \
+        cp /poet-shared/poet.batch / && \
+        sawset genesis \
+          -k /etc/sawtooth/keys/validator.priv \
+          -o config-genesis.batch && \
+        sawset proposal create \
+          -k /etc/sawtooth/keys/validator.priv \
+          sawtooth.consensus.algorithm.name=PoET \
+          sawtooth.consensus.algorithm.version=0.1 \
+          sawtooth.poet.report_public_key_pem=\
+          \\\"$$(cat /poet-shared/simulator_rk_pub.pem)\\\" \
+          sawtooth.poet.valid_enclave_measurements=$$(cat /poet-shared/poet-enclave-measurement) \
+          sawtooth.poet.valid_enclave_basenames=$$(cat /poet-shared/poet-enclave-basename) \
+          -o config.batch && \
+        sawset proposal create \
+          -k /etc/sawtooth/keys/validator.priv \
+             sawtooth.poet.target_wait_time=5 \
+             sawtooth.poet.initial_wait_time=25 \
+             sawtooth.publisher.max_batches_per_block=100 \
+          -o poet-settings.batch && \
+        sawadm genesis \
+          config-genesis.batch config.batch poet.batch poet-settings.batch && \
+        sawtooth-validator -v \
+          --bind network:tcp://0.0.0.0:8800 \
+          --bind component:tcp://0.0.0.0:4004 \
+          --bind consensus:tcp://0.0.0.0:5050 \
+          --peering static \
+          --endpoint tcp://validator-1:8800 \
+          --scheduler parallel \
+          --network-auth trust
+    \""
+    environment:
+      PYTHONPATH: "/project/sawtooth-core/consensus/poet/common:\
+            /project/sawtooth-core/consensus/poet/simulator:\
+            /project/sawtooth-core/consensus/poet/core"
+      stop_signal: SIGKILL
+
+  validator-2:
+    image: hyperledger/sawtooth-validator:chime
+    deploy:
+      placement:
+        constraints: [node.hostname == node-nuc2]
+    networks:
+      - node_network
+    volumes:
+      - poet-shared:/poet-shared
+    entrypoint: "bash -c \"\
+        sawadm keygen --force && \
+        mkdir -p /poet-shared/validator-2 || true && \
+        cp -a /etc/sawtooth/keys /poet-shared/validator-2/ && \
+        sawtooth-validator -v \
+          --bind network:tcp://0.0.0.0:8800 \
+          --bind component:tcp://0.0.0.0:4004 \
+          --bind consensus:tcp://0.0.0.0:5050 \
+          --peering static \
+          --endpoint tcp://validator-2:8800 \
+          --peers tcp://validator-1:8800 \
+          --scheduler parallel \
+          --network-auth trust
+    \""
+    environment:
+      PYTHONPATH: "/project/sawtooth-core/consensus/poet/common:\
+        /project/sawtooth-core/consensus/poet/simulator:\
+        /project/sawtooth-core/consensus/poet/core"
+    stop_signal: SIGKILL
+
+  validator-3:
+    image: hyperledger/sawtooth-validator:chime
+    deploy:
+      placement:
+        constraints: [node.hostname == node-nuc3]
+    networks:
+      - node_network
+    volumes:
+      - poet-shared:/poet-shared
+    entrypoint: "bash -c \"\
+        sawadm keygen --force && \
+        mkdir -p /poet-shared/validator-3 || true && \
+        cp -a /etc/sawtooth/keys /poet-shared/validator-3/ && \
+        sawtooth-validator -v \
+          --bind network:tcp://0.0.0.0:8800 \
+          --bind component:tcp://0.0.0.0:4004 \
+          --bind consensus:tcp://0.0.0.0:5050 \
+          --peering static \
+          --endpoint tcp://validator-3:8800 \
+          --peers tcp://validator-1:8800,tcp://validator-2:8800 \
+          --scheduler parallel \
+          --network-auth trust
+    \""
+    environment:
+      PYTHONPATH: "/project/sawtooth-core/consensus/poet/common:\
+        /project/sawtooth-core/consensus/poet/simulator:\
+        /project/sawtooth-core/consensus/poet/core"
+    stop_signal: SIGKILL
+
+  validator-4:
+    image: hyperledger/sawtooth-validator:chime
+    deploy:
+      placement:
+        constraints: [node.hostname == node-nuc4]
+    networks:
+      - node_network
+    volumes:
+      - poet-shared:/poet-shared
+    entrypoint: "bash -c \"\
+        sawadm keygen --force && \
+        mkdir -p /poet-shared/validator-4 || true && \
+        cp -a /etc/sawtooth/keys /poet-shared/validator-4/ && \
+        sawtooth-validator -v \
+          --bind network:tcp://0.0.0.0:8800 \
+          --bind component:tcp://0.0.0.0:4004 \
+          --bind consensus:tcp://0.0.0.0:5050 \
+          --peering static \
+          --endpoint tcp://validator-4:8800 \
+          --peers tcp://validator-1:8800,tcp://validator-2:8800,tcp://validator-3:8800 \
+          --scheduler parallel \
+          --network-auth trust
+    \""
+    environment:
+      PYTHONPATH: "/project/sawtooth-core/consensus/poet/common:\
+        /project/sawtooth-core/consensus/poet/simulator:\
+        /project/sawtooth-core/consensus/poet/core"
+    stop_signal: SIGKILL
+
+  poet-engine-1:
+    image: hyperledger/sawtooth-poet-engine:chime
+    deploy:
+      placement:
+        constraints: [node.hostname == node-nuc1]
+    depends_on:
+      - validator-1
+    networks:
+      - node_network
+    volumes:
+      - poet-shared:/poet-shared
+    entrypoint: "bash -c \"\
+          if [ ! -f /poet-shared/poet-enclave-measurement ]; then \
+              poet enclave measurement >> /poet-shared/poet-enclave-measurement; \
+          fi && \
+          if [ ! -f /poet-shared/poet-enclave-basename ]; then \
+              poet enclave basename >> /poet-shared/poet-enclave-basename; \
+          fi && \
+          if [ ! -f /poet-shared/simulator_rk_pub.pem ]; then \
+              cp /etc/sawtooth/simulator_rk_pub.pem /poet-shared; \
+          fi && \
+          while [ ! -f /poet-shared/validator-1/keys/validator.priv ]; do sleep 1; done && \
+          cp -a /poet-shared/validator-1/keys /etc/sawtooth && \
+          poet registration create -k /etc/sawtooth/keys/validator.priv -o /poet-shared/poet.batch && \
+          poet-engine -C tcp://validator-1:5050 --component tcp://validator-1:4004 \
+      \""
+
+  poet-engine-2:
+    image: hyperledger/sawtooth-poet-engine:chime
+    deploy:
+      placement:
+        constraints: [node.hostname == node-nuc2]
+    depends_on:
+      - validator-2
+    networks:
+      - node_network
+    volumes:
+      - poet-shared:/poet-shared
+    entrypoint: "bash -c \"\
+        while [ ! -f /poet-shared/validator-2/keys/validator.priv ]; do sleep 1; done && \
+        cp -a /poet-shared/validator-2/keys /etc/sawtooth && \
+        poet-engine -C tcp://validator-2:5050 --component tcp://validator-2:4004 \
+    \""
+
+  poet-engine-3:
+    image: hyperledger/sawtooth-poet-engine:chime
+    deploy:
+      placement:
+        constraints: [node.hostname == node-nuc3]
+    depends_on:
+      - validator-3
+    networks:
+      - node_network
+    volumes:
+      - poet-shared:/poet-shared
+    entrypoint: "bash -c \"\
+        while [ ! -f /poet-shared/validator-3/keys/validator.priv ]; do sleep 1; done && \
+        cp -a /poet-shared/validator-3/keys /etc/sawtooth && \
+        poet-engine -C tcp://validator-3:5050 --component tcp://validator-3:4004 \
+    \""
+
+  poet-engine-4:
+    image: hyperledger/sawtooth-poet-engine:chime
+    deploy:
+      placement:
+        constraints: [node.hostname == node-nuc4]
+    depends_on:
+      - validator-4
+    networks:
+      - node_network
+    volumes:
+      - poet-shared:/poet-shared
+    entrypoint: "bash -c \"\
+        while [ ! -f /poet-shared/validator-4/keys/validator.priv ]; do sleep 1; done && \
+        cp -a /poet-shared/validator-4/keys /etc/sawtooth && \
+        poet-engine -C tcp://validator-4:5050 --component tcp://validator-4:4004 \
+    \""
+
+  poet-validator-registry-tp-1:
+    image: hyperledger/sawtooth-poet-validator-registry-tp:chime
+    deploy:
+      placement:
+        constraints: [node.hostname == node-nuc1]
+    depends_on:
+      - validator-1
+    networks:
+      - node_network
+    command: poet-validator-registry-tp -vv -C tcp://validator-1:4004
+
+  poet-validator-registry-tp-2:
+    image: hyperledger/sawtooth-poet-validator-registry-tp:chime
+    deploy:
+      placement:
+        constraints: [node.hostname == node-nuc2]
+    depends_on:
+      - validator-2
+    networks:
+      - node_network
+    command: poet-validator-registry-tp -vv -C tcp://validator-2:4004
+
+  poet-validator-registry-tp-3:
+    image: hyperledger/sawtooth-poet-validator-registry-tp:chime
+    deploy:
+      placement:
+        constraints: [node.hostname == node-nuc3]
+    depends_on:
+      - validator-3
+    networks:
+      - node_network
+    command: poet-validator-registry-tp -vv -C tcp://validator-3:4004
+
+  poet-validator-registry-tp-4:
+    image: hyperledger/sawtooth-poet-validator-registry-tp:chime
+    deploy:
+      placement:
+        constraints: [node.hostname == node-nuc4]
+    depends_on:
+      - validator-4
+    networks:
+      - node_network
+    command: poet-validator-registry-tp -vv -C tcp://validator-4:4004
+
+  intkey-tp-1:
+    image: hyperledger/sawtooth-intkey-tp-python:chime
+    deploy:
+      placement:
+        constraints: [node.hostname == node-nuc1]
+    networks:
+      - node_network
+    command: intkey-tp-python -vv -C tcp://validator-1:4004
+    stop_signal: SIGKILL
+
+  intkey-tp-2:
+    image: hyperledger/sawtooth-intkey-tp-python:chime
+    deploy:
+      placement:
+        constraints: [node.hostname == node-nuc2]
+    networks:
+      - node_network
+    command: intkey-tp-python -vv -C tcp://validator-2:4004
+    stop_signal: SIGKILL
+
+  intkey-tp-3:
+    image: hyperledger/sawtooth-intkey-tp-python:chime
+    deploy:
+      placement:
+        constraints: [node.hostname == node-nuc3]
+    networks:
+      - node_network
+    command: intkey-tp-python -vv -C tcp://validator-3:4004
+    stop_signal: SIGKILL
+
+  intkey-tp-4:
+    image: hyperledger/sawtooth-intkey-tp-python:chime
+    deploy:
+      placement:
+        constraints: [node.hostname == node-nuc4]
+    networks:
+      - node_network
+    command: intkey-tp-python -vv -C tcp://validator-4:4004
+    stop_signal: SIGKILL
+
+  auction-tp-go-1:
+    image: moorada/sawtooth-auction-tp
+    depends_on:
+      - validator-1
+    deploy:
+      placement:
+        constraints: [node.hostname == node-nuc1]
+    networks:
+      - node_network
+    command: auction -vv -C tcp://validator-1:4004
+    stop_signal: SIGKILL
+
+  auction-tp-go-2:
+    image: moorada/sawtooth-auction-tp
+    depends_on:
+      - validator-2
+    deploy:
+      placement:
+        constraints: [node.hostname == node-nuc2]
+    networks:
+      - node_network
+    command: auction -vv -C tcp://validator-2:4004
+    stop_signal: SIGKILL
+
+  auction-tp-go-3:
+    image: moorada/sawtooth-auction-tp
+    depends_on:
+      - validator-3
+    deploy:
+      placement:
+        constraints: [node.hostname == node-nuc3]
+    networks:
+      - node_network
+    command: auction -vv -C tcp://validator-3:4004
+    stop_signal: SIGKILL
+
+  auction-tp-go-4:
+    image: moorada/sawtooth-auction-tp
+    depends_on:
+      - validator-4
+    deploy:
+      placement:
+        constraints: [node.hostname == node-nuc4]
+    networks:
+      - node_network
+    command: auction -vv -C tcp://validator-4:4004
+    stop_signal: SIGKILL
