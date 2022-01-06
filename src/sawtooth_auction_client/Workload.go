@@ -26,8 +26,9 @@ import (
 
 type WorkLoad struct {
 	Args struct {
-		WaitTime int `positional-arg-name:"waitTime" required:"true" description:"wait time"`
-		Quantity int `positional-arg-name:"quantity" required:"true" description:"quantity"`
+		WaitTime        int `positional-arg-name:"waitTime" required:"true" description:"wait time"`
+		Quantity        int `positional-arg-name:"quantity" required:"true" description:"quantity"`
+		StartItemNumber int `positional-arg-name:"startItemNumber" required:"true" description:"Start Item Number"`
 		//Value string `positional-arg-name:"value" required:"true" description:"Amount to set"`
 		//IdItem     string `positional-arg-name:"IdItem" required:"true" description:"Name of key to set"`
 		//BidId      string `positional-arg-name:"BidId" required:"true" description:"Name of key to set"`
@@ -72,11 +73,10 @@ func (args *WorkLoad) Run() error {
 	idItem := "idItem"
 	nameItem := "nameItem"
 	description := "description"
-
 	bidId := "bidId"
 	bidderName := "bidderName"
 
-	for i := 0; i < args.Args.Quantity; i++ {
+	for i := args.Args.StartItemNumber; i < args.Args.StartItemNumber+args.Args.Quantity; i++ {
 
 		time.Sleep(time.Millisecond * time.Duration(rand.Intn(args.Args.WaitTime)))
 		expiryTime := time.Now().Add(time.Minute * 30)
@@ -89,7 +89,7 @@ func (args *WorkLoad) Run() error {
 		}
 	}
 
-	for i := 0; i < args.Args.Quantity; i++ {
+	for i := args.Args.StartItemNumber; i < args.Args.StartItemNumber+args.Args.Quantity; i++ {
 		numberItem := strconv.Itoa(i)
 		for j := 0; j < args.Args.Quantity; j++ {
 			time.Sleep(time.Millisecond * time.Duration(rand.Intn(args.Args.WaitTime)))

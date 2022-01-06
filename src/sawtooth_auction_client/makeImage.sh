@@ -1,1 +1,1 @@
-docker build --no-cache -t moorada/sawtooth-shell .
+docker build --no-cache -t moorada/sawtooth-shell2 .
